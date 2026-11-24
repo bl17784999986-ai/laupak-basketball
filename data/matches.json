@@ -1,11 +1,11 @@
 {
   "meta": {
-    "updatedAt": "2026-11-23 22:55:00 +08:00",
+    "updatedAt": "2026-11-24 14:46:00 +08:00",
     "channelsOk": [
       "netease_jclq_bet",
-      "fieldlevelmedia",
-      "betmgm",
-      "sportsmole"
+      "inquirer_nba_scores",
+      "nbcsports",
+      "fanduel"
     ],
     "channelsError": []
   },
@@ -701,7 +701,602 @@
         "homeMotiv": 90,
         "motivationNote": "强烈复仇战意！湖人 5 天前刚在主场被爵士终结 9 连胜，如今以逸待劳休整 2 天，面对背靠背且内线缺 4 将的爵士，湖人赢球概率极高；需注意湖人本季主让 13.5+ 时盘口 0 胜 2 负，需防末节领先放松卡盘。"
       }
+    ],
+    "2026-11-24": [
+      {
+        "id": "tue301",
+        "code": "周二 301",
+        "league": "欧篮联",
+        "group": "常规赛",
+        "kickoff": "11-25 01:00",
+        "kickoffIso": "2026-11-25T01:00:00+08:00",
+        "away": "巴黎",
+        "home": "贝西克塔",
+        "awayRecord": "欧篮联",
+        "homeRecord": "欧篮联",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.65,
+          "home": 1.75
+        },
+        "initSpread": 1.5,
+        "spread": 1.5,
+        "oddsSpread": {
+          "away": 1.75,
+          "home": 1.65
+        },
+        "initTotal": 183.5,
+        "total": 183.5,
+        "oddsTotal": {
+          "over": 1.66,
+          "under": 1.74
+        },
+        "sfcOdds": {
+          "away": [
+            4.2,
+            4.3,
+            7.1,
+            13,
+            21,
+            26
+          ],
+          "home": [
+            4.4,
+            4.5,
+            7.8,
+            15,
+            24,
+            30
+          ]
+        },
+        "awayForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "L"
+        ],
+        "homeForm": [
+          "W",
+          "L",
+          "W",
+          "W",
+          "L"
+        ],
+        "awayStats": "巴黎男篮以欧篮联顶级转换速度与高频率三分著称，场均回合数高，客场攻强守弱特征突出。",
+        "homeStats": "贝西克塔斯主场氛围炽热、身体对抗强硬，但面对快节奏外线球队时防守轮转容易出现高失分。",
+        "awayInjuries": "轮换阵容相对齐整，保持高强度全场紧逼与五上五下节奏。",
+        "homeInjuries": "主力框架基本可用，主场受让 1.5 分具备一定拉力。",
+        "h2h": "预设总分高达 183.5（本轮欧篮联最高），且大分低水 1.66，机构对双方快节奏对攻预期极强。",
+        "awayMotiv": 78,
+        "homeMotiv": 76,
+        "motivationNote": "欧篮联势均力敌的快节奏对决，竞彩主受让 1.5 分且主让低水（1.65），胜负悬念较大，优先关注大分方向与小分差（1-5 / 6-10）。"
+      },
+      {
+        "id": "tue302",
+        "code": "周二 302",
+        "league": "欧篮联",
+        "group": "常规赛",
+        "kickoff": "11-25 02:00",
+        "kickoffIso": "2026-11-25T02:00:00+08:00",
+        "away": "博洛尼亚",
+        "home": "贝红星",
+        "awayRecord": "欧篮联",
+        "homeRecord": "欧篮联",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 3.7,
+          "home": 1.1
+        },
+        "initSpread": -8.5,
+        "spread": -8.5,
+        "oddsSpread": {
+          "away": 1.75,
+          "home": 1.65
+        },
+        "initTotal": 172.5,
+        "total": 172.5,
+        "oddsTotal": {
+          "over": 1.66,
+          "under": 1.74
+        },
+        "sfcOdds": {
+          "away": [
+            8,
+            9,
+            20,
+            32,
+            44,
+            65
+          ],
+          "home": [
+            4.7,
+            3.35,
+            4.3,
+            6,
+            8.5,
+            9
+          ]
+        },
+        "awayForm": [
+          "L",
+          "L",
+          "W",
+          "L",
+          "L"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "W",
+          "L",
+          "W"
+        ],
+        "awayStats": "博洛尼亚维图斯客场进攻火力起伏较大，面对魔鬼主场压迫时失误率容易攀升。",
+        "homeStats": "贝尔格莱德红星主场战斗力位居欧篮联第一梯队，防守强度与内线护框优势明显。",
+        "awayInjuries": "客场旅途消耗下替补火力衔接偏弱。",
+        "homeInjuries": "主力框架健康，主场作战战意与士气充足。",
+        "h2h": "贝红星主场胜负赔率低至 1.10，主让 8.5 分低水（1.65）设防严密，正路支撑较强。",
+        "awayMotiv": 64,
+        "homeMotiv": 85,
+        "motivationNote": "欧篮联本轮最稳主胜候选之一，主胜 6-10 分（@3.35）与 11-15 分（@4.30）为最核心分差落点。"
+      },
+      {
+        "id": "tue303",
+        "code": "周二 303",
+        "league": "欧篮联",
+        "group": "常规赛",
+        "kickoff": "11-25 03:30",
+        "kickoffIso": "2026-11-25T03:30:00+08:00",
+        "away": "帕纳辛纳",
+        "home": "巴伦西亚",
+        "awayRecord": "欧篮联",
+        "homeRecord": "欧篮联",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.75,
+          "home": 1.65
+        },
+        "initSpread": -1.5,
+        "spread": -1.5,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 175.5,
+        "total": 175.5,
+        "oddsTotal": {
+          "over": 1.74,
+          "under": 1.66
+        },
+        "sfcOdds": {
+          "away": [
+            4.4,
+            4.5,
+            7.8,
+            15,
+            24,
+            30
+          ],
+          "home": [
+            4.2,
+            4.3,
+            7.1,
+            13,
+            21,
+            26
+          ]
+        },
+        "awayForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "W"
+        ],
+        "homeForm": [
+          "W",
+          "L",
+          "W",
+          "W",
+          "L"
+        ],
+        "awayStats": "帕纳辛纳科斯球星成色与欧篮联底蕴深厚，阵地战执行力与关键球能力突出。",
+        "homeStats": "巴伦西亚主场节奏紧凑、防守纪律性高，竞彩对其主场小让 1.5 分表达出一定尊重。",
+        "awayInjuries": "阵容深度充裕，客场作战主要考验外线手感延续性。",
+        "homeInjuries": "主场以逸待劳，防守端针对性较强。",
+        "h2h": "强强对话格局，小分低水（1.66）提示双方可能陷入高强度肉搏拉锯战。",
+        "awayMotiv": 80,
+        "homeMotiv": 80,
+        "motivationNote": "主让 1.5 浅盘下胜负接近五五开，冷门指数偏高，更适合关注小分（175.5）或轻仓博弈 1-5 分险胜区间。"
+      },
+      {
+        "id": "tue304",
+        "code": "周二 304",
+        "league": "欧篮联",
+        "group": "常规赛",
+        "kickoff": "11-25 03:45",
+        "kickoffIso": "2026-11-25T03:45:00+08:00",
+        "away": "米兰",
+        "home": "阿斯维尔",
+        "awayRecord": "欧篮联",
+        "homeRecord": "欧篮联",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.65,
+          "home": 1.75
+        },
+        "initSpread": 1.5,
+        "spread": 1.5,
+        "oddsSpread": {
+          "away": 1.75,
+          "home": 1.65
+        },
+        "initTotal": 173.5,
+        "total": 173.5,
+        "oddsTotal": {
+          "over": 1.66,
+          "under": 1.74
+        },
+        "sfcOdds": {
+          "away": [
+            4.2,
+            4.3,
+            7.1,
+            13,
+            21,
+            26
+          ],
+          "home": [
+            4.4,
+            4.5,
+            7.8,
+            15,
+            24,
+            30
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "W",
+          "L",
+          "W"
+        ],
+        "homeForm": [
+          "L",
+          "W",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "米兰奥林匹亚经验丰富、外线投射点多，但本季客场稳定性存在波动。",
+        "homeStats": "阿斯维尔主场韧性不俗，受让 1.5 分且主让低水（1.65）显示机构对主队守盘有所防范。",
+        "awayInjuries": "客场连战体能与轮换衔接需留意。",
+        "homeInjuries": "主场拼抢积极，具备咬住比分的能力。",
+        "h2h": "浅盘博弈，双方实力差距微弱，大分（173.5）配低水 1.66 值得留意。",
+        "awayMotiv": 76,
+        "homeMotiv": 76,
+        "motivationNote": "客让仅 1.5 分且客让高水（1.75），米兰客场并无绝对把握，串关宜防主受让或转向大小分。"
+      },
+      {
+        "id": "tue305",
+        "code": "周二 305",
+        "league": "欧篮联",
+        "group": "常规赛",
+        "kickoff": "11-25 04:00",
+        "kickoffIso": "2026-11-25T04:00:00+08:00",
+        "away": "费内巴切",
+        "home": "巴萨",
+        "awayRecord": "欧篮联",
+        "homeRecord": "欧篮联",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.43,
+          "home": 2.09
+        },
+        "initSpread": 3.5,
+        "spread": 3.5,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 170.5,
+        "total": 170.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            3.75,
+            3.85,
+            5.9,
+            10,
+            16,
+            18
+          ],
+          "home": [
+            5.3,
+            5.5,
+            10,
+            20,
+            29,
+            40
+          ]
+        },
+        "awayForm": [
+          "W",
+          "W",
+          "W",
+          "L",
+          "W"
+        ],
+        "homeForm": [
+          "L",
+          "W",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "费内巴切攻防体系成熟、客场控制节奏能力强，能在巴塞罗那主场让出 3.5 分足见实力定位。",
+        "homeStats": "巴萨男篮近态起伏、进攻端攻坚效率不及巅峰期，主场受让 3.5 分面临考验。",
+        "awayInjuries": "整体阵容厚度在欧篮联名列前茅。",
+        "homeInjuries": "面对费内巴切高强度防守，后场失误控制是关键。",
+        "h2h": "欧篮联传统豪门对决，预设总分 170.5 为本轮最低，防守拉锯特征鲜明。",
+        "awayMotiv": 82,
+        "homeMotiv": 74,
+        "motivationNote": "费内巴切客场让出 3.5 分且独赢赔率 1.43 支撑较足，倾向客胜及 1-5 / 6-10 分段。"
+      },
+      {
+        "id": "tue306",
+        "code": "周二 306",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-25 08:00",
+        "kickoffIso": "2026-11-25T08:00:00+08:00",
+        "away": "活塞",
+        "home": "魔术",
+        "awayRecord": "10-6",
+        "homeRecord": "7-9",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.55,
+          "home": 1.87
+        },
+        "initSpread": 1.5,
+        "spread": 2.5,
+        "oddsSpread": {
+          "away": 1.65,
+          "home": 1.75
+        },
+        "initTotal": 213.5,
+        "total": 214.5,
+        "oddsTotal": {
+          "over": 1.74,
+          "under": 1.66
+        },
+        "sfcOdds": {
+          "away": [
+            4.25,
+            4.4,
+            7.3,
+            10,
+            18,
+            20
+          ],
+          "home": [
+            4.6,
+            4.75,
+            8.7,
+            14,
+            24,
+            30
+          ]
+        },
+        "awayForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "W"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "W",
+          "L",
+          "W"
+        ],
+        "awayStats": "活塞赛季 10 胜 6 负势头强劲，攻防两端年轻活力十足；竞彩由外盘客让 1.5 升至客让 2.5 且客让低水（1.65）。",
+        "homeStats": "魔术赛季 7 胜 9 负但近 5 战赢下 4 场（近 6 主场仅 2 场打出大分），主场防守极具韧性。",
+        "awayInjuries": "核心控卫凯德·康宁汉姆因膝伤列为每日观察（DTD），赛前临场出场状态需重点确认。",
+        "homeInjuries": "头号球星保罗·班凯罗继续缺阵，魔术阵地战硬解能力明显受损。",
+        "h2h": "两队均为防守硬朗、节奏偏慢的东部球队，竞彩小分 214.5 给到 1.66 低水设防。",
+        "awayMotiv": 80,
+        "homeMotiv": 76,
+        "motivationNote": "魔术缺班凯罗是最大基本面劣势，活塞客让升至 2.5 分且低水；若康宁汉姆确认出战则活塞客胜与小分方向均具价值。"
+      },
+      {
+        "id": "tue307",
+        "code": "周二 307",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-25 09:00",
+        "kickoffIso": "2026-11-25T09:00:00+08:00",
+        "away": "凯尔特人",
+        "home": "奇才",
+        "awayRecord": "11-6",
+        "homeRecord": "7-11",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.1,
+          "home": 3.7
+        },
+        "initSpread": 5.5,
+        "spread": 9.5,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 230.5,
+        "total": 219.5,
+        "oddsTotal": {
+          "over": 1.62,
+          "under": 1.78
+        },
+        "sfcOdds": {
+          "away": [
+            6,
+            3.7,
+            4,
+            5.6,
+            7.8,
+            6.5
+          ],
+          "home": [
+            8.8,
+            10,
+            18,
+            25,
+            48,
+            60
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "W",
+          "W",
+          "L"
+        ],
+        "homeForm": [
+          "W",
+          "L",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "凯尔特人 11 胜 6 负（让分盘 7-10 ATS），塔图姆场均 26.4 分、怀特 12.8 分；客场 10 战仅 2 场打出大分（小分率 80%），本场力争止客场 3 连败。",
+        "homeStats": "奇才 7 胜 11 负（让分盘 9-9 ATS，大小分 6 大 12 小），安东尼·戴维斯场均 25.1 分、特雷·杨 17.1 分、新秀 AJ·迪班萨 16.5 分，刚大胜魔术士气回升。",
+        "awayInjuries": "主力框架健康，防守轮转纪律性强。",
+        "homeInjuries": "盘口出现剧烈异动：初盘绿军仅客让 5.5 分、总分 230.5，临场暴涨至客让 9.5~10.5 分、总分骤降 11 分至 219.5，需高度警惕奇才主力临场轮休/伤停。",
+        "h2h": "凯尔特人对奇才已取得交锋 7 连胜，最近 3 次交手绿军均以两位数让分压制对手。",
+        "awayMotiv": 84,
+        "homeMotiv": 68,
+        "motivationNote": "盘口异动极大（让分翻倍深化 + 总分骤降 11 分），机构对凯尔特人客场止颓取胜高度防范，同时留意竞彩 219.5 总分已下探极深后的反弹风险。"
+      },
+      {
+        "id": "tue308",
+        "code": "周二 308",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-25 11:00",
+        "kickoffIso": "2026-11-25T11:00:00+08:00",
+        "away": "独行侠",
+        "home": "掘金",
+        "awayRecord": "8-7",
+        "homeRecord": "9-5",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 3.32,
+          "home": 1.14
+        },
+        "initSpread": -8.5,
+        "spread": -7.5,
+        "oddsSpread": {
+          "away": 1.75,
+          "home": 1.65
+        },
+        "initTotal": 237.5,
+        "total": 232.5,
+        "oddsTotal": {
+          "over": 1.66,
+          "under": 1.74
+        },
+        "sfcOdds": {
+          "away": [
+            7.7,
+            8.2,
+            19,
+            28,
+            40,
+            50
+          ],
+          "home": [
+            5.05,
+            3.55,
+            4.2,
+            6.2,
+            8.9,
+            8.5
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "W",
+          "W",
+          "L"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "W"
+        ],
+        "awayStats": "独行侠赛季 8 胜 7 负，但目前有多达 5 名球员进入伤病缺阵名单，客场高原作战轮换吃紧。",
+        "homeStats": "掘金赛季 9 胜 5 负、近 5 战 4 胜 1 负状态正佳，投篮命中率高达 48%，主场近 7 战 4 场打出大分，丹佛高原主场优势显著。",
+        "awayInjuries": "多达 5 名球员缺阵，阵容完整性明显落于下风。",
+        "homeInjuries": "仅斯特劳瑟等个别轮换缺阵，核心主力框架齐整。",
+        "h2h": "掘金高原主场胜率高，竞彩主让 7.5 分配低水（1.65）且独赢 1.14，稳胆属性突出。",
+        "awayMotiv": 70,
+        "homeMotiv": 86,
+        "motivationNote": "外盘主让 8.5、竞彩主让 7.5 低水（1.65），面对缺兵少将的独行侠，掘金主场取胜概率高，重点关注主胜 6-10（@3.55）与 11-15（@4.20）分段。"
+      }
     ]
   },
-  "results": {}
+  "results": {
+    "mon301": {
+      "awayPts": 117,
+      "homePts": 111
+    },
+    "mon302": {
+      "awayPts": 128,
+      "homePts": 111
+    },
+    "mon303": {
+      "awayPts": 120,
+      "homePts": 125
+    },
+    "mon304": {
+      "awayPts": 116,
+      "homePts": 111
+    },
+    "mon305": {
+      "awayPts": 116,
+      "homePts": 142
+    },
+    "mon306": {
+      "awayPts": 108,
+      "homePts": 122
+    },
+    "mon307": {
+      "awayPts": 123,
+      "homePts": 119
+    },
+    "mon308": {
+      "awayPts": 104,
+      "homePts": 116
+    },
+    "mon309": {
+      "awayPts": 123,
+      "homePts": 107
+    },
+    "mon310": {
+      "awayPts": 94,
+      "homePts": 109
+    }
+  }
 }
