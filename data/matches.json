@@ -1,14 +1,14 @@
 {
   "meta": {
-    "updatedAt": "2026-11-25 13:28:53 +08:00",
+    "updatedAt": "2026-11-25 13:35:07 +08:00",
     "runner": "github-actions",
     "channelsOk": [
       "espn_nba_all"
     ],
     "channelsError": [],
     "stats": {
-      "addedMatches": 9,
-      "updatedOdds": 1,
+      "addedMatches": 0,
+      "updatedOdds": 10,
       "matchedScores": 2
     }
   },
