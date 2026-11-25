@@ -1,0 +1,41 @@
+name: Sync Basketball JC Schedule, Odds & Results
+
+on:
+  schedule:
+    # 北京时间 07:00, 11:30, 14:30, 18:00, 22:00 自动同步（覆盖赛前开盘、NBA早场完场赛果、晚间新期次）
+    - cron: '0 23 * * *'
+    - cron: '30 3 * * *'
+    - cron: '30 6 * * *'
+    - cron: '0 10 * * *'
+    - cron: '0 14 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run multi-channel basketball sync script
+        run: python3 scripts/sync_basketball_data.py
+
+      - name: Commit and push updated data/matches.json
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add data/matches.json
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: auto sync basketball jc odds & results [skip ci]"
+            git push
+          fi
