@@ -2864,7 +2864,7 @@
       if (!url) throw new Error('NO_SCF_URL');
       const sep = url.includes('?') ? '&' : '?';
       const ctrl = new AbortController();
-      const tid = setTimeout(() => ctrl.abort(), 9000);
+      const tid = setTimeout(() => ctrl.abort(), 30000);
       const resp = await fetch(url + sep + 't=' + Date.now(), { signal: ctrl.signal });
       clearTimeout(tid);
       if (!resp.ok) throw new Error('HTTP ' + resp.status);
@@ -2957,11 +2957,16 @@
       let scoreCount = 0;
 
       // 通道 0: 腾讯云函数 URL 直连（免 GitHub Token，实时返回最新赛程与完场比分）
+      let scfErrMsg = '';
       try {
         const r0 = await syncChannelTencentScf();
         okChannels.push('腾讯云直连');
         scoreCount += r0.updatedScores;
-      } catch (e) {}
+      } catch (e) {
+        if (e && e.message !== 'NO_SCF_URL') {
+          scfErrMsg = e.name === 'AbortError' ? '腾讯云响应超时' : ('腾讯云直连失败(' + e.message + ')');
+        }
+      }
 
       // 通道 1: GitHub 仓库自动同步 data/matches.json
       try {
@@ -2982,9 +2987,10 @@
       const chText = okChannels.length ? okChannels.join('+') : '本地内置快照';
       document.getElementById('syncStatusText').textContent = `已同步 ${activeDate} (${matches.length}场 · ${chText} · ${ts})`;
       if (!silent) {
+        const warnPart = scfErrMsg ? `（${scfErrMsg}，请检查函数URL与CORS跨域设置）` : '';
         showToast(okChannels.length
-          ? `多路同步完成 [${chText}]` + (scoreCount > 0 ? `，更新 ${scoreCount} 场赛果` : '')
-          : '已校验本地内置快照（部署至 GitHub Pages 后将自动连通双路实时通道）');
+          ? `多路同步完成 [${chText}]` + (scoreCount > 0 ? `，更新 ${scoreCount} 场赛果` : '') + warnPart
+          : '已校验本地内置快照' + warnPart);
       }
     }
 
