@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-11-25 13:35:07 +08:00",
+    "updatedAt": "2026-11-25 15:53:36 +08:00",
     "runner": "github-actions",
     "channelsOk": [
       "espn_nba_all"
@@ -8,8 +8,8 @@
     "channelsError": [],
     "stats": {
       "addedMatches": 0,
-      "updatedOdds": 10,
-      "matchedScores": 2
+      "updatedOdds": 9,
+      "matchedScores": 3
     }
   },
   "issuesByDate": {
@@ -1198,8 +1198,8 @@
         "kickoffIso": "2026-11-25T11:00:00+08:00",
         "away": "独行侠",
         "home": "掘金",
-        "awayRecord": "10-7",
-        "homeRecord": "10-5",
+        "awayRecord": "11-7",
+        "homeRecord": "10-6",
         "sfOpen": true,
         "oddsSf": {
           "away": 1.78,
@@ -1352,7 +1352,7 @@
           "home": 1.7
         },
         "initTotal": 221.5,
-        "total": 221.5,
+        "total": 222.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
@@ -1628,7 +1628,7 @@
           "home": 1.7
         },
         "initTotal": 231.5,
-        "total": 231.5,
+        "total": 232.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
@@ -1825,11 +1825,11 @@
         "homeRecord": "11-6",
         "sfOpen": true,
         "oddsSf": {
-          "away": 1.44,
-          "home": 2.34
+          "away": 1.52,
+          "home": 2.15
         },
         "initSpread": 3.5,
-        "spread": 3.5,
+        "spread": 2.5,
         "oddsSpread": {
           "away": 1.7,
           "home": 1.7
@@ -1843,18 +1843,18 @@
         "sfcOdds": {
           "away": [
             4.94,
-            5.33,
-            6.91,
-            10.8,
-            20.34,
-            30.5
+            5.53,
+            7.44,
+            12.08,
+            23.6,
+            37.36
           ],
           "home": [
-            5.78,
-            8.08,
-            13.6,
-            27.59,
-            67.42,
+            5.53,
+            7.44,
+            12.08,
+            23.6,
+            55.56,
             99.0
           ]
         },
@@ -1931,6 +1931,10 @@
     "tue307": {
       "awayPts": 131,
       "homePts": 116
+    },
+    "tue308": {
+      "awayPts": 120,
+      "homePts": 101
     }
   }
 }
