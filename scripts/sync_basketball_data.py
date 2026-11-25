@@ -209,6 +209,59 @@ def fetch_espn_nba_all():
     return upcoming_by_date, scores, records
 
 
+
+EUROLEAGUE_KW_TO_ZH = {
+    "paris": "巴黎", "besiktas": "贝西克塔", "virtus": "博洛尼亚", "bologna": "博洛尼亚",
+    "zvezda": "贝红星", "crvena": "贝红星", "panathinaikos": "帕纳辛纳", "valencia": "巴伦西亚",
+    "milan": "米兰", "olimpia": "米兰", "asvel": "阿斯维尔", "villeurbanne": "阿斯维尔",
+    "fenerbahce": "费内巴切", "barcelona": "巴萨", "real madrid": "皇马", "olympiacos": "奥林匹亚",
+    "efes": "艾菲斯", "bayern": "拜仁", "maccabi": "马卡比", "baskonia": "巴斯克",
+    "zalgiris": "萨拉基利斯", "partizan": "游击队", "dubai": "迪拜", "hapoel": "特拉维夫夏普尔",
+}
+
+
+def map_euroleague_team(name):
+    low = str(name or "").lower()
+    for kw, zh in EUROLEAGUE_KW_TO_ZH.items():
+        if kw in low:
+            return zh
+    return ""
+
+
+def fetch_euroleague_results():
+    """欧篮联官方公开 JSON 接口（拉取近 40 场已完场欧篮联比分，自动匹配中文队名）。"""
+    results = []
+    # 动态推算当前赛季代码（如 2026-27 赛季为 E2026）
+    now = bjt_now()
+    season_year = now.year if now.month >= 8 else now.year - 1
+    url = (
+        f"https://feeds.incrowdsports.com/provider/euroleague-feeds/v2/competitions/E/"
+        f"seasons/E{season_year}/games?limit=40&orderBy=date&sortOrder=desc"
+    )
+    payload = json.loads(fetch_text(url, timeout=10))
+    for g in payload.get("data") or []:
+        if not g.get("played") and str(g.get("status") or "").lower() not in ("result", "final", "finished"):
+            continue
+        home_obj = g.get("home") or {}
+        away_obj = g.get("away") or {}
+        h_zh = map_euroleague_team(home_obj.get("name") or home_obj.get("abbreviatedName"))
+        a_zh = map_euroleague_team(away_obj.get("name") or away_obj.get("abbreviatedName"))
+        hp = home_obj.get("score")
+        ap = away_obj.get("score")
+        if h_zh and a_zh and hp is not None and ap is not None:
+            try:
+                results.append({
+                    "code": "",
+                    "away": a_zh,
+                    "home": h_zh,
+                    "awayPts": int(ap),
+                    "homePts": int(hp),
+                })
+            except ValueError:
+                pass
+    return results
+
+
 def fetch_163_results():
     """网易竞彩篮球完场比分补充（覆盖欧篮联等非 NBA 完场赛果）。"""
     results = []
@@ -323,8 +376,9 @@ def main():
     channels_ok, channels_err = [], []
     incoming_by_date, all_scores, team_records = {}, [], {}
 
-    with ThreadPoolExecutor(max_workers=2) as pool:
+    with ThreadPoolExecutor(max_workers=3) as pool:
         f_espn = pool.submit(fetch_espn_nba_all)
+        f_euro = pool.submit(fetch_euroleague_results)
         f_163 = pool.submit(fetch_163_results)
 
         try:
@@ -337,6 +391,16 @@ def main():
         except Exception as e:
             channels_err.append(f"espn_nba_all: {e}")
             print(f"[WARN] espn_nba_all: {e}")
+
+        try:
+            reuro = f_euro.result(timeout=12)
+            if reuro:
+                all_scores.extend(reuro)
+                channels_ok.append("euroleague_official_api")
+                print(f"[OK] euroleague_official_api: 完场 {len(reuro)} 场")
+        except Exception as e:
+            channels_err.append(f"euroleague_official_api: {e}")
+            print(f"[WARN] euroleague_official_api: {e}")
 
         try:
             r163 = f_163.result(timeout=12)
