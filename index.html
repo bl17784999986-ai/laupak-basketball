@@ -429,6 +429,15 @@
         支持粘贴来自 <code class="text-sky-400">cp.zgzcw.com</code>、<code class="text-orange-400">sports.163.com</code>、<code class="text-amber-400">live.nowscore.com</code> 或 <code class="text-emerald-400">m.sporttery.cn</code> 的竞彩篮球赔率行或完场赛果文本（客队在前、主队在后，如：<code class="text-slate-200">周一301 灰熊 112:104 黄蜂</code>）。
       </p>
       <div class="space-y-3 text-xs">
+        <div class="p-3 rounded-xl bg-orange-950/20 border border-orange-500/40 space-y-2">
+          <div class="font-semibold text-orange-300">☁️ 腾讯云函数 URL 直连配置（免 GitHub Token，同足彩架构）</div>
+          <div class="flex items-center gap-2">
+            <input id="inpScfUrl" type="url" placeholder="粘贴你的腾讯云函数 URL（https://...scf.tencentcs.com/）" class="flex-1 px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-orange-500" />
+            <button id="btnSaveScfUrl" type="button" class="shrink-0 px-3 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-500 text-white font-semibold transition">保存并同步</button>
+          </div>
+          <div class="text-[10px] text-slate-400">配置一次后自动保存在浏览器，每次打开页面或点「同步实时赔率」都会直接从腾讯云拉取最新赛事与完场赛果。</div>
+        </div>
+
         <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800 flex flex-wrap items-center justify-between gap-2">
           <div class="text-slate-300">
             <div class="font-semibold text-white">一键同步 JSON 数据包 (赛程 + 赔率 + 赛果)</div>
@@ -2844,6 +2853,49 @@
       return { updatedMatches, updatedScores, settledLegs };
     }
 
+    // 如需写死到 GitHub Pages 让所有手机打开即自动同步，可直接把你的腾讯云函数 URL 填在下方引号里：
+    const DEFAULT_SCF_URL = '';
+    function getScfUrl() {
+      try { return (localStorage.getItem('jc_bball_scf_url_v1') || DEFAULT_SCF_URL || '').trim(); } catch (e) { return DEFAULT_SCF_URL; }
+    }
+
+    async function syncChannelTencentScf() {
+      const url = getScfUrl();
+      if (!url) throw new Error('NO_SCF_URL');
+      const sep = url.includes('?') ? '&' : '?';
+      const ctrl = new AbortController();
+      const tid = setTimeout(() => ctrl.abort(), 9000);
+      const resp = await fetch(url + sep + 't=' + Date.now(), { signal: ctrl.signal });
+      clearTimeout(tid);
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      const data = await resp.json();
+      const r = applyImportedDataStore(data);
+      let extraScores = 0;
+      if (Array.isArray(data.rawResults) && data.rawResults.length) {
+        const allStored = Object.values(issuesByDate).flat();
+        data.rawResults.forEach(rr => {
+          if (rr.awayPts === undefined || rr.homePts === undefined) return;
+          const mObj = allStored.find(m =>
+            (rr.code && m.code.replace(/\s+/g, '') === rr.code.replace(/\s+/g, '')) ||
+            (m.away === rr.away && m.home === rr.home)
+          );
+          if (mObj) {
+            matchResults[mObj.id] = { awayPts: rr.awayPts, homePts: rr.homePts };
+            settleReviewLegsFromScore(mObj, rr.awayPts, rr.homePts);
+            extraScores++;
+          }
+        });
+        if (extraScores > 0) {
+          saveMatchResults();
+          renderMatchList();
+          renderAnalysisWorkspace();
+          renderRecommendedCombos();
+          renderReviewSection();
+        }
+      }
+      return { updatedMatches: r.updatedMatches, updatedScores: r.updatedScores + extraScores, channelsOk: data.channelsOk || [] };
+    }
+
     async function syncChannelRepoJson() {
       const ctrl = new AbortController();
       const tid = setTimeout(() => ctrl.abort(), 3500);
@@ -2903,6 +2955,13 @@
       if (!silent) document.getElementById('syncStatusText').textContent = '正在多路同步赔率与赛果...';
       const okChannels = [];
       let scoreCount = 0;
+
+      // 通道 0: 腾讯云函数 URL 直连（免 GitHub Token，实时返回最新赛程与完场比分）
+      try {
+        const r0 = await syncChannelTencentScf();
+        okChannels.push('腾讯云直连');
+        scoreCount += r0.updatedScores;
+      } catch (e) {}
 
       // 通道 1: GitHub 仓库自动同步 data/matches.json
       try {
@@ -3034,8 +3093,17 @@
     const modal = document.getElementById('importModal');
     const closeModal = () => { modal.classList.add('hidden'); modal.classList.remove('flex'); };
     document.getElementById('btnOpenImport').addEventListener('click', () => {
+      const scfInp = document.getElementById('inpScfUrl');
+      if (scfInp) scfInp.value = getScfUrl();
       modal.classList.remove('hidden');
       modal.classList.add('flex');
+    });
+    document.getElementById('btnSaveScfUrl').addEventListener('click', async () => {
+      const val = (document.getElementById('inpScfUrl').value || '').trim();
+      try { localStorage.setItem('jc_bball_scf_url_v1', val); } catch (e) {}
+      if (!val) { showToast('已清除腾讯云函数 URL'); return; }
+      closeModal();
+      await runMultiChannelSync(false);
     });
     document.getElementById('btnCloseImport').addEventListener('click', closeModal);
     document.getElementById('btnCancelImport').addEventListener('click', closeModal);
