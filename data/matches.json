@@ -1,368 +1,1302 @@
-#!/usr/bin/env python3
-"""
-GitHub Actions 专用 · 竞彩篮球多路自动同步脚本（免 GITHUB_TOKEN，直接读写仓库 data/matches.json）
-"""
-
-import argparse
-import datetime
-import json
-import math
-import os
-import re
-import ssl
-import sys
-import urllib.request
-from concurrent.futures import ThreadPoolExecutor
-
-REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_PATH = os.path.join(REPO_ROOT, "data", "matches.json")
-
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/129.0.0.0 Safari/537.36",
-    "Accept": "application/json, text/html, */*",
-    "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
-}
-
-NBA_ABBR_TO_ZH = {
-    "ATL": "老鹰", "BOS": "凯尔特人", "BKN": "篮网", "CHA": "黄蜂", "CHI": "公牛",
-    "CLE": "骑士", "DAL": "独行侠", "DEN": "掘金", "DET": "活塞", "GS": "勇士",
-    "GSW": "勇士", "HOU": "火箭", "IND": "步行者", "LAC": "快船", "LAL": "湖人",
-    "MEM": "灰熊", "MIA": "热火", "MIL": "雄鹿", "MIN": "森林狼", "NO": "鹈鹕",
-    "NOP": "鹈鹕", "NY": "尼克斯", "NYK": "尼克斯", "OKC": "雷霆", "ORL": "魔术",
-    "PHI": "76人", "PHX": "太阳", "POR": "开拓者", "SAC": "国王", "SA": "马刺",
-    "SAS": "马刺", "TOR": "猛龙", "UTA": "爵士", "UTAH": "爵士", "WAS": "奇才", "WSH": "奇才",
-}
-
-TEAM_ALIAS_KEYWORDS = [
-    "老鹰", "凯尔特人", "篮网", "黄蜂", "公牛", "骑士", "独行侠", "掘金", "活塞", "勇士",
-    "火箭", "步行者", "快船", "湖人", "灰熊", "热火", "雄鹿", "森林狼", "鹈鹕", "尼克斯",
-    "雷霆", "魔术", "76人", "太阳", "开拓者", "国王", "马刺", "猛龙", "爵士", "奇才",
-]
-
-WEEKDAY_ZH = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
-
-
-def bjt_now():
-    return datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))
-
-
-def normalize_team(name):
-    if not name:
-        return ""
-    s = re.sub(r"[\s\(\)（）\[\]【】]", "", str(name))
-    for kw in TEAM_ALIAS_KEYWORDS:
-        if kw in s:
-            return kw
-    return s
-
-
-def safe_float(val, default=None):
-    try:
-        if val is None or val == "":
-            return default
-        return float(str(val).replace("+", "").strip())
-    except ValueError:
-        return default
-
-
-def american_to_decimal(ml):
-    v = safe_float(ml)
-    if v is None or v == 0:
-        return None
-    dec = (1.0 + v / 100.0) if v > 0 else (1.0 + 100.0 / abs(v))
-    return round(max(1.02, dec * 0.91), 2)
-
-
-def estimate_sfc_odds(home_spread):
-    sigma = 11.5
-    mean = -home_spread
-    bounds = [(0.5, 5.5), (5.5, 10.5), (10.5, 15.5), (15.5, 20.5), (20.5, 25.5), (25.5, 80.0)]
-
-    def cdf(x, m):
-        return 0.5 * (1.0 + math.erf((x - m) / (sigma * math.sqrt(2.0))))
-
-    away_odds, home_odds = [], []
-    for lo, hi in bounds:
-        p_h = max(0.008, cdf(hi, mean) - cdf(lo, mean))
-        p_a = max(0.008, cdf(hi, -mean) - cdf(lo, -mean))
-        home_odds.append(round(min(99.0, max(3.20, 0.85 / p_h)), 2))
-        away_odds.append(round(min(99.0, max(3.20, 0.85 / p_a)), 2))
-    return {"away": away_odds, "home": home_odds}
-
-
-def fetch_text(url, encoding="utf-8", timeout=10):
-    req = urllib.request.Request(url, headers=HEADERS)
-    ctx = ssl.create_default_context()
-    with urllib.request.urlopen(req, timeout=timeout, context=ctx) as resp:
-        raw = resp.read()
-    try:
-        return raw.decode(encoding, errors="ignore")
-    except Exception:
-        return raw.decode("gbk", errors="ignore")
-
-
-def strip_tags(s):
-    return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", s)).strip()
-
-
-def fetch_espn_nba_all():
-    """ESPN NBA 全量通道：拉取美东昨/今/明三天全部新赛程、实时盘口、完场比分与球队战绩。"""
-    now_utc = datetime.datetime.now(datetime.timezone.utc)
-    et_today = now_utc - datetime.timedelta(hours=5)
-    dates = [(et_today + datetime.timedelta(days=off)).strftime("%Y%m%d") for off in (-1, 0, 1)]
-
-    upcoming_by_date = {}
-    scores = []
-    records = {}
-
-    for d in dates:
-        url = f"https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates={d}"
-        data = json.loads(fetch_text(url, timeout=10))
-        seq = 301
-        for ev in data.get("events") or []:
-            comp = (ev.get("competitions") or [{}])[0]
-            done = bool(((comp.get("status") or {}).get("type") or {}).get("completed"))
-            comps = comp.get("competitors") or []
-            away_c = next((c for c in comps if c.get("homeAway") == "away"), None)
-            home_c = next((c for c in comps if c.get("homeAway") == "home"), None)
-            if not away_c or not home_c:
-                continue
-
-            a_abbr = ((away_c.get("team") or {}).get("abbreviation") or "").upper()
-            h_abbr = ((home_c.get("team") or {}).get("abbreviation") or "").upper()
-            a_zh = NBA_ABBR_TO_ZH.get(a_abbr, "")
-            h_zh = NBA_ABBR_TO_ZH.get(h_abbr, "")
-            if not a_zh or not h_zh:
-                continue
-
-            a_rec = ((away_c.get("records") or [{}])[0]).get("summary") or "--"
-            h_rec = ((home_c.get("records") or [{}])[0]).get("summary") or "--"
-            if a_rec != "--":
-                records[a_zh] = a_rec
-            if h_rec != "--":
-                records[h_zh] = h_rec
-
-            if done:
-                try:
-                    scores.append({
-                        "code": "",
-                        "away": a_zh,
-                        "home": h_zh,
-                        "awayPts": int(away_c.get("score", 0)),
-                        "homePts": int(home_c.get("score", 0)),
-                    })
-                except ValueError:
-                    pass
-                continue
-
-            try:
-                dt_utc = datetime.datetime.fromisoformat((ev.get("date") or "").replace("Z", "+00:00"))
-                dt_bjt = dt_utc.astimezone(datetime.timezone(datetime.timedelta(hours=8)))
-            except Exception:
-                dt_bjt = bjt_now() + datetime.timedelta(hours=10)
-
-            issue_date = f"{d[:4]}-{d[4:6]}-{d[6:8]}"
-            wd = WEEKDAY_ZH[datetime.date(int(d[:4]), int(d[4:6]), int(d[6:8])).weekday()]
-
-            odds_arr = comp.get("odds") or []
-            odds0 = odds_arr[0] if odds_arr else {}
-            spread_home = safe_float(odds0.get("spread"), 0.0)
-            m_det = re.match(r"([A-Z]{2,4})\s*([+-]?\d+(?:\.\d+)?)", str(odds0.get("details") or "").strip())
-            if m_det:
-                fav_abbr, fav_line = m_det.group(1), safe_float(m_det.group(2), 0.0)
-                if fav_abbr == h_abbr:
-                    spread_home = -abs(fav_line)
-                elif fav_abbr == a_abbr:
-                    spread_home = abs(fav_line)
-
-            total_pts = safe_float(odds0.get("overUnder"), 222.5)
-            h_ml = american_to_decimal((odds0.get("homeTeamOdds") or {}).get("moneyLine"))
-            a_ml = american_to_decimal((odds0.get("awayTeamOdds") or {}).get("moneyLine"))
-            if h_ml is None or a_ml is None:
-                p_h = max(0.08, min(0.92, 0.5 * (1.0 + math.erf((-spread_home) / (11.5 * math.sqrt(2.0))))))
-                h_ml = round(max(1.03, 0.89 / p_h), 2)
-                a_ml = round(max(1.03, 0.89 / (1.0 - p_h)), 2)
-
-            upcoming_by_date.setdefault(issue_date, []).append({
-                "id": f"espn_{d}_{seq}",
-                "code": f"{wd} {seq}",
-                "league": "NBA",
-                "group": "常规赛",
-                "kickoff": dt_bjt.strftime("%m-%d %H:%M"),
-                "kickoffIso": dt_bjt.strftime("%Y-%m-%dT%H:%M:00+08:00"),
-                "away": a_zh,
-                "home": h_zh,
-                "awayRecord": a_rec,
-                "homeRecord": h_rec,
-                "sfOpen": abs(spread_home) < 12.5,
-                "oddsSf": {"away": a_ml, "home": h_ml} if abs(spread_home) < 12.5 else {"away": None, "home": None},
-                "initSpread": spread_home,
-                "spread": spread_home,
-                "oddsSpread": {"away": 1.70, "home": 1.70},
-                "initTotal": total_pts,
-                "total": total_pts,
-                "oddsTotal": {"over": 1.70, "under": 1.70},
-                "sfcOdds": estimate_sfc_odds(spread_home),
-            })
-            seq += 1
-
-    return upcoming_by_date, scores, records
-
-
-def fetch_163_results():
-    """网易竞彩篮球完场比分补充（覆盖欧篮联等非 NBA 完场赛果）。"""
-    results = []
-    try:
-        html = fetch_text("https://sports.163.com/caipiao/match/basketball/jclq", timeout=8)
-        for tr in re.findall(r"<tr[^>]*>(.*?)</tr>", html, re.S):
-            seg = strip_tags(tr)
-            if "完" not in seg:
-                continue
-            code_m = re.search(r"(周[一二三四五六日]\d{3})", seg)
-            after_fin = seg.split("完", 1)[1]
-            sc_m = re.search(r"([^\s\d]{2,10})\s+(\d{2,3})\s*[-:]\s*(\d{2,3})\s+([^\s\d]{2,10})", after_fin)
-            if not sc_m:
-                continue
-            ap, hp = int(sc_m.group(2)), int(sc_m.group(3))
-            if not (50 <= ap <= 210 and 50 <= hp <= 210):
-                continue
-            results.append({
-                "code": (code_m.group(1)[:2] + " " + code_m.group(1)[2:]) if code_m else "",
-                "away": normalize_team(sc_m.group(1)),
-                "home": normalize_team(sc_m.group(4)),
-                "awayPts": ap,
-                "homePts": hp,
-            })
-    except Exception:
-        pass
-    return results
-
-
-def build_default_match(inc):
-    sp = inc.get("spread", 0.0)
-    tot = inc.get("total", 220.5)
-    return {
-        **inc,
-        "awayRecord": inc.get("awayRecord", "--"),
-        "homeRecord": inc.get("homeRecord", "--"),
-        "initSpread": inc.get("initSpread", sp),
-        "initTotal": inc.get("initTotal", tot),
-        "awayForm": inc.get("awayForm", ["W", "L", "W", "L", "W"]),
-        "homeForm": inc.get("homeForm", ["W", "W", "L", "W", "L"]),
-        "awayStats": inc.get("awayStats", f"{inc.get('away', '')}（赛季 {inc.get('awayRecord', '--')}），已自动接入最新让分与大小分盘口。"),
-        "homeStats": inc.get("homeStats", f"{inc.get('home', '')}（赛季 {inc.get('homeRecord', '--')}），已自动接入最新让分与大小分盘口。"),
-        "awayInjuries": inc.get("awayInjuries", "请关注赛前 30 分钟官方伤病报告更新。"),
-        "homeInjuries": inc.get("homeInjuries", "请关注赛前 30 分钟官方伤病报告更新。"),
-        "h2h": inc.get("h2h", f"{inc.get('away', '')}(客) VS {inc.get('home', '')}(主)：主让 {sp:+.1f} / 预设总分 {tot}。"),
-        "awayMotiv": inc.get("awayMotiv", 78 if sp > 0 else 72),
-        "homeMotiv": inc.get("homeMotiv", 78 if sp < 0 else 72),
-        "motivationNote": inc.get("motivationNote", f"GitHub Actions 自动同步：主让 {sp:+.1f}，预设总分 {tot}。"),
+{
+  "meta": {
+    "updatedAt": "2026-11-24 14:46:00 +08:00",
+    "channelsOk": [
+      "netease_jclq_bet",
+      "inquirer_nba_scores",
+      "nbcsports",
+      "fanduel"
+    ],
+    "channelsError": []
+  },
+  "issuesByDate": {
+    "2026-11-23": [
+      {
+        "id": "mon301",
+        "code": "周一 301",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-24 08:00",
+        "kickoffIso": "2026-11-24T08:00:00+08:00",
+        "away": "灰熊",
+        "home": "黄蜂",
+        "awayRecord": "12-5",
+        "homeRecord": "4-11",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.29,
+          "home": 2.48
+        },
+        "initSpread": 3.5,
+        "spread": 4.5,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 215.5,
+        "total": 215.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            4.45,
+            4,
+            5.3,
+            8.5,
+            12.5,
+            13
+          ],
+          "home": [
+            5.2,
+            5.5,
+            12.5,
+            22,
+            33,
+            38
+          ]
+        },
+        "awayForm": [
+          "W",
+          "W",
+          "W",
+          "W",
+          "L"
+        ],
+        "homeForm": [
+          "L",
+          "L",
+          "W",
+          "L",
+          "L"
+        ],
+        "awayStats": "赛季 12 胜 5 负，赢盘率极高（让分盘 12-5 ATS），此前一度取得客场 8 连胜，刚在明尼苏达 95-104 止步，本场具备反弹需求；大小分 9 大 8 小。",
+        "homeStats": "赛季 4 胜 11 负（让分盘 6-9 ATS），进攻端末节熄火明显，大小分 6 大 9 小，近 19 场球队总分打出 15 次小分。",
+        "awayInjuries": "杰拉米·格兰特（左小腿一级拉伤，休战至少两周）、小斯科蒂·皮蓬、GG·杰克逊、卡梅伦·布泽尔缺阵，泰·杰罗姆大概率出战，锋线轮换受损但整体深度仍在。",
+        "homeInjuries": "康·克努佩尔、丹尼斯·施罗德缺阵，格雷森·阿伦（脑震荡协议）与格兰特·威廉姆斯每日观察，外线组织与防守稳定性受挫。",
+        "h2h": "黄蜂外线出手依赖度高但关键球效率联盟垫底，灰熊防守转换与客场赢盘表现占优。",
+        "awayMotiv": 80,
+        "homeMotiv": 64,
+        "motivationNote": "灰熊刚被森林狼终结客场 8 连胜，客战弱旅黄蜂反弹战意明确；盘口从外盘客让 3.5 升至竞彩客让 4.5，需关注灰熊伤病名单对下半场体能的影响。"
+      },
+      {
+        "id": "mon302",
+        "code": "周一 302",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-24 08:00",
+        "kickoffIso": "2026-11-24T08:00:00+08:00",
+        "away": "开拓者",
+        "home": "76人",
+        "awayRecord": "客场连战",
+        "homeRecord": "14-3",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 2.48,
+          "home": 1.29
+        },
+        "initSpread": -4,
+        "spread": -5.5,
+        "oddsSpread": {
+          "away": 1.75,
+          "home": 1.65
+        },
+        "initTotal": 232.5,
+        "total": 233.5,
+        "oddsTotal": {
+          "over": 1.66,
+          "under": 1.74
+        },
+        "sfcOdds": {
+          "away": [
+            5.2,
+            5.5,
+            10.5,
+            18,
+            32,
+            38
+          ],
+          "home": [
+            3.8,
+            3.95,
+            6.3,
+            9,
+            15,
+            17
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "L",
+          "W",
+          "L"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "W",
+          "W",
+          "W"
+        ],
+        "awayStats": "正处 6 连客赛程，近 4 战 1 胜 3 负，上场 26 分逆转未果遭尼克斯布里奇斯三分绝杀；利拉德直言近 3 场开局慢热亟待修正，赛季大小分 6 大 10 小。",
+        "homeStats": "14 胜 3 负并列联盟最佳，豪取 5 连胜！上场 132-129 险胜雄鹿（詹姆斯 21+6+6、马克西 17 分、恩比德罚球定胜），全队强调本场打满 48 分钟专注度。",
+        "awayInjuries": "连续客场旅途消耗较大，上半场得分荒频发，外线防守对 76 人多核冲击压力大。",
+        "homeInjuries": "杰伦·布朗（腿筋）因伤缺席过去 2 场，本场升级为大概率出战（Probable）；安芬尼·西蒙斯近 2 场均贡献 18 分状态稳定。",
+        "h2h": "本季首次交锋，过去三个赛季双方常规赛均战成 1-1 平手。",
+        "awayMotiv": 68,
+        "homeMotiv": 84,
+        "motivationNote": "76 人冲击 6 连胜且上场险些被雄鹿逼入加时后全队警觉度提升；盘口由初盘主让 4.0 深调至竞彩主让 5.5 且主让低水（1.65），正路设防明确。"
+      },
+      {
+        "id": "mon303",
+        "code": "周一 303",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-24 08:30",
+        "kickoffIso": "2026-11-24T08:30:00+08:00",
+        "away": "雷霆",
+        "home": "步行者",
+        "awayRecord": "近7战2-5",
+        "homeRecord": "4连败",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.4,
+          "home": 2.15
+        },
+        "initSpread": 5,
+        "spread": 4.5,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 224.5,
+        "total": 223.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            4.45,
+            4.1,
+            5.45,
+            8,
+            12,
+            10.5
+          ],
+          "home": [
+            5.6,
+            6,
+            13,
+            19,
+            30,
+            33
+          ]
+        },
+        "awayForm": [
+          "L",
+          "W",
+          "L",
+          "L",
+          "L"
+        ],
+        "homeForm": [
+          "W",
+          "L",
+          "L",
+          "L",
+          "L"
+        ],
+        "awayStats": "双方均处背靠背第二场！雷霆昨日 113-123 客负热火，近 7 战 5 负；内线限制对手仅得 38.4 分（联盟第 2），但人员极度捉襟见肘。",
+        "homeStats": "昨日 106-113 负尼克斯遭遇 4 连败，场均内线得分 51.6 分（联盟第 3），祖巴茨上场拿下 10 分 14 篮板表现稳健，主帅卡莱尔透露将调整轮换。",
+        "awayInjuries": "大面积伤病潮！亚历山大（腰背挫伤/颈部拉伤）缺阵，卡鲁索、阿代·马拉、托皮奇、杰林·威廉姆斯以及长期伤号杰伦·威廉姆斯、霍姆格伦、华莱士均缺席，昨日仅 9 人可用。",
+        "homeInjuries": "后场双控卫泰瑞斯·哈利伯顿与 TJ·麦康奈尔均因左腿筋伤势缺阵，球队阵地组织火力明显下降。",
+        "h2h": "总决赛重演但物是人非，双方核心大面积缺阵且背靠背作战，节奏与失误控制将成为胜负手。",
+        "awayMotiv": 70,
+        "homeMotiv": 76,
+        "motivationNote": "高冷门预警场次！雷霆仅剩残阵且背靠背客场作战，盘口从客让 5.0 退至 4.5；步行者虽缺双控卫但主场急需止 4 连败，受让方向具备较强博冷土壤。"
+      },
+      {
+        "id": "mon304",
+        "code": "周一 304",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-24 08:30",
+        "kickoffIso": "2026-11-24T08:30:00+08:00",
+        "away": "雄鹿",
+        "home": "猛龙",
+        "awayRecord": "1-16",
+        "homeRecord": "6-10",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 3.95,
+          "home": 1.08
+        },
+        "initSpread": -11.5,
+        "spread": -9.5,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 225.5,
+        "total": 224.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            8.8,
+            10,
+            20,
+            27,
+            54,
+            60
+          ],
+          "home": [
+            5.7,
+            3.6,
+            4,
+            5.5,
+            7.7,
+            7
+          ]
+        },
+        "awayForm": [
+          "L",
+          "L",
+          "L",
+          "L",
+          "L"
+        ],
+        "homeForm": [
+          "L",
+          "L",
+          "L",
+          "L",
+          "W"
+        ],
+        "awayStats": "赛季 1 胜 16 负深陷 13 连败（距队史 15 连败纪录仅差 2 场），但近 5 场失利分差均在 10 分以内！泰勒·希罗上场狂砍 50 分险些绝平东部第一 76 人。",
+        "homeStats": "赛季 6 胜 10 负，上场 105-102 险胜活塞终结 6 连败；斯科蒂·巴恩斯场均 24.3 分 7.2 板，首轮秀艾伦·格雷夫斯首次先发砍下 20+10。",
+        "awayInjuries": "休赛期交易字母哥后重建阵痛明显，但希罗（场均 21.3 分）增加持球后进攻端韧性回升。",
+        "homeInjuries": "科怀·伦纳德（膝伤连续第 14 场缺阵）、RJ·巴雷特（腿筋）缺阵，科林·默里-博伊尔斯大概率出战，锋线核心火力不足。",
+        "h2h": "猛龙主场胜面大但缺兵少将，难以轻松打穿深盘；雄鹿近 5 战韧性突出。",
+        "awayMotiv": 74,
+        "homeMotiv": 78,
+        "motivationNote": "盘口从外盘主让 11.5 显著退至竞彩主让 9.5，机构对缺少伦纳德与巴雷特的猛龙打穿两位数深盘信心不足；猛龙赢球大概率但需防雄鹿受让咬住分差。"
+      },
+      {
+        "id": "mon305",
+        "code": "周一 305",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-24 08:30",
+        "kickoffIso": "2026-11-24T08:30:00+08:00",
+        "away": "篮网",
+        "home": "森林狼",
+        "awayRecord": "3-12",
+        "homeRecord": "8连主收官",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 5.05,
+          "home": 1.02
+        },
+        "initSpread": -12,
+        "spread": -12.5,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 223.5,
+        "total": 223.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            12,
+            15,
+            22,
+            30,
+            70,
+            90
+          ],
+          "home": [
+            7,
+            4,
+            3.6,
+            5,
+            6.2,
+            4.8
+          ]
+        },
+        "awayForm": [
+          "L",
+          "L",
+          "W",
+          "L",
+          "L"
+        ],
+        "homeForm": [
+          "W",
+          "L",
+          "W",
+          "W",
+          "W"
+        ],
+        "awayStats": "前 15 场仅 3 胜 12 负，上场 111-113 惜败魔术表现有所起色；朱利叶斯·兰德尔（21.1 分 6.0 板）首次重返明尼苏达战旧主，小波特场均 20.2 分。",
+        "homeStats": "迎来 8 连主收官战（取胜即可打出 6 胜 2 负主场佳绩），上场主场 104-95 终结灰熊客场 8 连胜，防守端戈贝尔+麦克丹尼尔斯压迫力极强。",
+        "awayInjuries": "年轻后卫叶戈尔·杰明命中率仅 36.1% 已被下放替补，球队防守端整体纪律性偏弱。",
+        "homeInjuries": "头号得分手安东尼·爱德华兹（场均 33.3 分，膝伤）缺阵，但道苏姆（17.9 分）、麦克丹尼尔斯（17.5 分）、拉梅洛·鲍尔（17.2 分）多点开花弥补火力。",
+        "h2h": "兰德尔战旧主战意足，但森林狼主场防守效率与整体天赋明显领先篮网一档。",
+        "awayMotiv": 72,
+        "homeMotiv": 84,
+        "motivationNote": "森林狼在缺少爱德华兹的情况下仍从主让 12.0 升盘至 12.5，胜负主胜赔率压至 1.02 设防极严，8 连主收官战主胜大概率，关注 11-15 分段胜分差。"
+      },
+      {
+        "id": "mon306",
+        "code": "周一 306",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-24 09:00",
+        "kickoffIso": "2026-11-24T09:00:00+08:00",
+        "away": "骑士",
+        "home": "公牛",
+        "awayRecord": "9-8",
+        "homeRecord": "4-12",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.12,
+          "home": 3.5
+        },
+        "initSpread": 8.5,
+        "spread": 8.5,
+        "oddsSpread": {
+          "away": 1.65,
+          "home": 1.75
+        },
+        "initTotal": 241.5,
+        "total": 240.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            5.6,
+            3.6,
+            4.3,
+            5.9,
+            8.5,
+            8
+          ],
+          "home": [
+            8.2,
+            8.6,
+            16,
+            23,
+            38,
+            44
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "W",
+          "W",
+          "L"
+        ],
+        "homeForm": [
+          "L",
+          "L",
+          "W",
+          "L",
+          "L"
+        ],
+        "awayStats": "赛季 9 胜 8 负（让分盘 7-10 ATS，大小分 10 大 7 小），詹姆斯·哈登刚轰下 50+ 超越科比升至历史第 3，搭档米切尔外线火力凶猛，近 6 场半场全胜。",
+        "homeStats": "赛季 4 胜 12 负但赢盘率不俗（8-7 ATS，大小分 7 大 7 小），主场近 35 场第四节赢盘 23 次，面对缺少护框中锋的对手具备内线得分空间。",
+        "awayInjuries": "内线核心埃文·莫布利（左大脚趾扭伤）连续第 3 场缺阵，纳奎安·汤姆林缺阵，杰伦·泰森大概率出战；护框与协防高度下降。",
+        "homeInjuries": "轮换整体相对完整，主场面对高节奏骑士倾向于对攻刷分。",
+        "h2h": "本场预设总分高达 240.5（今日最高），双方近期进攻节奏快且骑士缺少莫布利护框。",
+        "awayMotiv": 80,
+        "homeMotiv": 70,
+        "motivationNote": "客让 8.5 保持稳定且竞彩给到客让低水（1.65），机构看好骑士客场取胜；但莫布利缺阵让骑士内线失分风险加大，总分 240.5 轻微下调 1 分需防高位卡分。"
+      },
+      {
+        "id": "mon307",
+        "code": "周一 307",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-24 09:00",
+        "kickoffIso": "2026-11-24T09:00:00+08:00",
+        "away": "太阳",
+        "home": "鹈鹕",
+        "awayRecord": "8-7",
+        "homeRecord": "5-13",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.29,
+          "home": 2.48
+        },
+        "initSpread": 3.5,
+        "spread": 5.5,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 232.5,
+        "total": 235.5,
+        "oddsTotal": {
+          "over": 1.66,
+          "under": 1.74
+        },
+        "sfcOdds": {
+          "away": [
+            3.9,
+            4.1,
+            6.3,
+            9,
+            15,
+            13.5
+          ],
+          "home": [
+            5.4,
+            5.5,
+            10.5,
+            18,
+            28,
+            33
+          ]
+        },
+        "awayForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "W"
+        ],
+        "homeForm": [
+          "L",
+          "L",
+          "W",
+          "L",
+          "L"
+        ],
+        "awayStats": "赛季 8 胜 7 负（近 9 战赢 7 场，让分盘 6-9 ATS，大小分 8 大 7 小），首节进入状态极快（近 35 场赢下 24 次首节）。",
+        "homeStats": "赛季 5 胜 13 负（让分盘 9-8 ATS，大小分 10 大 7 小），主场近 40 场赢盘 24 次韧性尚可，但第四节崩盘率高（近 50 场末节仅赢盘 15 次）。",
+        "awayInjuries": "中锋马克·威廉姆斯（左肩手术）长期缺阵，锋线防守尖兵瑞安·邓恩（右股四头肌）出战成疑，内线护框高度受限。",
+        "homeInjuries": "德章泰·穆雷、锡安·威廉森与特雷·墨菲三世赛前均进入伤病名单关注范围，临场出战状态直接影响主队内线冲击力。",
+        "h2h": "太阳外线三分火力克制鹈鹕外线防守，而鹈鹕内线得分强但外线投射偏弱。",
+        "awayMotiv": 80,
+        "homeMotiv": 68,
+        "motivationNote": "盘口异动显著：外盘太阳仅让 3.5 分、总分 232.5，而竞彩直接开至太阳客让 5.5 分、总分升至 235.5（大分低水 1.66），资金与机构对大分及太阳取胜倾向一致。"
+      },
+      {
+        "id": "mon308",
+        "code": "周一 308",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-24 09:30",
+        "kickoffIso": "2026-11-24T09:30:00+08:00",
+        "away": "快船",
+        "home": "火箭",
+        "awayRecord": "4-11",
+        "homeRecord": "12-5",
+        "sfOpen": false,
+        "oddsSf": {
+          "away": null,
+          "home": null
+        },
+        "initSpread": -12.5,
+        "spread": -13.5,
+        "oddsSpread": {
+          "away": 1.75,
+          "home": 1.65
+        },
+        "initTotal": 224.5,
+        "total": 227.5,
+        "oddsTotal": {
+          "over": 1.66,
+          "under": 1.74
+        },
+        "sfcOdds": {
+          "away": [
+            14,
+            18,
+            28,
+            37,
+            90,
+            110
+          ],
+          "home": [
+            7.6,
+            4.15,
+            3.45,
+            4.8,
+            5.7,
+            4.2
+          ]
+        },
+        "awayForm": [
+          "W",
+          "W",
+          "L",
+          "L",
+          "L"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "4 胜 11 负西部第 13，客场 0 胜 7 负且 3 连败，客场场均净负 14.0 分（得 107.6 失 121.6）；加兰场均 20.9 分、大洛近 5 场场均 20 分三分 42.2%。",
+        "homeStats": "12 胜 5 负西部第 4，主场 7 胜 1 负（让分盘 11-6 ATS，大小分 11 大 6 小）；休整 2 天，杜兰特 21.0 分 + 申京 22.1 分 9.3 板 + 范弗里特 + 阿门·汤普森攻防俱佳。",
+        "awayInjuries": "布拉德利·比尔（膝伤）、乔丹·米勒缺阵；布兰登·英格拉姆（跟腱/脚跟术后）虽挂伤病名单但据报有望迎来快船生涯首秀，磨合度存疑。",
+        "homeInjuries": "仅替补中锋卡佩拉（脚踝）赛前决定，申京、杜兰特、范弗里特、阿门·汤普森、小贾巴里·史密斯主力五虎全员健康。",
+        "h2h": "上赛季交手快船占优但如今快船已彻底重建，火箭赛季净效率 +7.9 对快船 -6.4 形成明显压制。",
+        "awayMotiv": 64,
+        "homeMotiv": 86,
+        "motivationNote": "竞彩胜负未开售，让分由 12.5 升至主让 13.5 且主让低水（1.65），总分由 224.5 升至 227.5；火箭主场净胜分 +9.9 对客场全败的快船优势显著，主胜 11-15 分段赔率低至 3.45。"
+      },
+      {
+        "id": "mon309",
+        "code": "周一 309",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-24 11:00",
+        "kickoffIso": "2026-11-24T11:00:00+08:00",
+        "away": "马刺",
+        "home": "国王",
+        "awayRecord": "14-3",
+        "homeRecord": "2-14",
+        "sfOpen": false,
+        "oddsSf": {
+          "away": null,
+          "home": null
+        },
+        "initSpread": 10.5,
+        "spread": 11.5,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 224.5,
+        "total": 224.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            6.9,
+            4.2,
+            3.9,
+            5.5,
+            6,
+            5.2
+          ],
+          "home": [
+            10,
+            11,
+            20,
+            28,
+            50,
+            58
+          ]
+        },
+        "awayForm": [
+          "W",
+          "W",
+          "W",
+          "L",
+          "W"
+        ],
+        "homeForm": [
+          "L",
+          "L",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "赛季 14 胜 3 负高居西部前列（让分盘 7-10 ATS），防守极其稳固，大小分 5 大 12 小（小分率 70.6%）；文班亚马场均 29.9 分 12.3 板 3.94 盖帽。",
+        "homeStats": "赛季 2 胜 14 负联盟垫底区间（净效率第 29，让分盘 6-10 ATS，大小分 8 大 8 小）；新秀达柳斯·阿库夫场均 25.4 分 7.4 助，萨博尼斯场均 13.6 篮板。",
+        "awayInjuries": "重大临场变数！维克托·文班亚马（背部紧张）与德阿龙·福克斯（小腿）双双列为出战成疑（Questionable），迪伦·哈珀（髋伤）缺阵。",
+        "homeInjuries": "主力轮换相对健康，但球队整体外线防守与攻防转换效率处于联盟下游。",
+        "h2h": "马刺整体实力与篮板保护远胜国王，但若文班亚马与福克斯同时轮休，客让 11.5 深盘将面临明显阻力。",
+        "awayMotiv": 76,
+        "homeMotiv": 68,
+        "motivationNote": "竞彩胜负未开售。需紧盯赛前 30 分钟文班亚马与福克斯的临场出场确认：若出战则马刺客让 11.5 与小分方向稳健；若双核轮休，国王主场受让 +11.5 具备较强冷门防范价值。"
+      },
+      {
+        "id": "mon310",
+        "code": "周一 310",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-24 11:00",
+        "kickoffIso": "2026-11-24T11:00:00+08:00",
+        "away": "爵士",
+        "home": "湖人",
+        "awayRecord": "3-15",
+        "homeRecord": "14-3",
+        "sfOpen": false,
+        "oddsSf": {
+          "away": null,
+          "home": null
+        },
+        "initSpread": -13.5,
+        "spread": -13.5,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 228.5,
+        "total": 227.5,
+        "oddsTotal": {
+          "over": 1.66,
+          "under": 1.74
+        },
+        "sfcOdds": {
+          "away": [
+            15,
+            18,
+            27,
+            34,
+            80,
+            100
+          ],
+          "home": [
+            7.9,
+            4.3,
+            3.7,
+            4.8,
+            5.5,
+            3.8
+          ]
+        },
+        "awayForm": [
+          "L",
+          "W",
+          "W",
+          "L",
+          "L"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "W",
+          "L",
+          "W"
+        ],
+        "awayStats": "3 胜 15 负西部第 14，背靠背第二场！昨日 114-116 惜败独行侠（米哈伊柳克狂轰 39 分 10 记三分，但全队出现 23 次失误）；客场 8 战仅 3 场打出 230+ 高分。",
+        "homeStats": "14 胜 3 负西部第 2，休整 2 天体能充沛！进攻效率 119.6、命中率 48.9% 联盟第一，东契奇场均 37.2 分 7.7 助，沃克·凯斯勒场均 14.3 分 10.7 板。",
+        "awayInjuries": "内线彻底真空！小贾伦·杰克逊（膝韧带撕裂）、马尔卡宁（手部骨折）、努尔基奇（足部）、海斯（左膝）全部缺阵，只能由班巴临时先发中锋。",
+        "homeInjuries": "奥斯汀·里夫斯（左脚跟挫伤）继续缺阵，格莱姆斯带护指先发，东契奇与凯斯勒完全健康。",
+        "h2h": "本季已交手 2 次战成 1-1：10 月 25 日湖人 132-123 胜（东契奇 52 分）；11 月 18 日爵士在洛杉矶 109-97 爆冷终结湖人 9 连胜（夹击东契奇造 9 失误）。",
+        "awayMotiv": 66,
+        "homeMotiv": 90,
+        "motivationNote": "强烈复仇战意！湖人 5 天前刚在主场被爵士终结 9 连胜，如今以逸待劳休整 2 天，面对背靠背且内线缺 4 将的爵士，湖人赢球概率极高；需注意湖人本季主让 13.5+ 时盘口 0 胜 2 负，需防末节领先放松卡盘。"
+      }
+    ],
+    "2026-11-24": [
+      {
+        "id": "tue301",
+        "code": "周二 301",
+        "league": "欧篮联",
+        "group": "常规赛",
+        "kickoff": "11-25 01:00",
+        "kickoffIso": "2026-11-25T01:00:00+08:00",
+        "away": "巴黎",
+        "home": "贝西克塔",
+        "awayRecord": "欧篮联",
+        "homeRecord": "欧篮联",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.65,
+          "home": 1.75
+        },
+        "initSpread": 1.5,
+        "spread": 1.5,
+        "oddsSpread": {
+          "away": 1.75,
+          "home": 1.65
+        },
+        "initTotal": 183.5,
+        "total": 183.5,
+        "oddsTotal": {
+          "over": 1.66,
+          "under": 1.74
+        },
+        "sfcOdds": {
+          "away": [
+            4.2,
+            4.3,
+            7.1,
+            13,
+            21,
+            26
+          ],
+          "home": [
+            4.4,
+            4.5,
+            7.8,
+            15,
+            24,
+            30
+          ]
+        },
+        "awayForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "L"
+        ],
+        "homeForm": [
+          "W",
+          "L",
+          "W",
+          "W",
+          "L"
+        ],
+        "awayStats": "巴黎男篮以欧篮联顶级转换速度与高频率三分著称，场均回合数高，客场攻强守弱特征突出。",
+        "homeStats": "贝西克塔斯主场氛围炽热、身体对抗强硬，但面对快节奏外线球队时防守轮转容易出现高失分。",
+        "awayInjuries": "轮换阵容相对齐整，保持高强度全场紧逼与五上五下节奏。",
+        "homeInjuries": "主力框架基本可用，主场受让 1.5 分具备一定拉力。",
+        "h2h": "预设总分高达 183.5（本轮欧篮联最高），且大分低水 1.66，机构对双方快节奏对攻预期极强。",
+        "awayMotiv": 78,
+        "homeMotiv": 76,
+        "motivationNote": "欧篮联势均力敌的快节奏对决，竞彩主受让 1.5 分且主让低水（1.65），胜负悬念较大，优先关注大分方向与小分差（1-5 / 6-10）。"
+      },
+      {
+        "id": "tue302",
+        "code": "周二 302",
+        "league": "欧篮联",
+        "group": "常规赛",
+        "kickoff": "11-25 02:00",
+        "kickoffIso": "2026-11-25T02:00:00+08:00",
+        "away": "博洛尼亚",
+        "home": "贝红星",
+        "awayRecord": "欧篮联",
+        "homeRecord": "欧篮联",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 3.7,
+          "home": 1.1
+        },
+        "initSpread": -8.5,
+        "spread": -8.5,
+        "oddsSpread": {
+          "away": 1.75,
+          "home": 1.65
+        },
+        "initTotal": 172.5,
+        "total": 172.5,
+        "oddsTotal": {
+          "over": 1.66,
+          "under": 1.74
+        },
+        "sfcOdds": {
+          "away": [
+            8,
+            9,
+            20,
+            32,
+            44,
+            65
+          ],
+          "home": [
+            4.7,
+            3.35,
+            4.3,
+            6,
+            8.5,
+            9
+          ]
+        },
+        "awayForm": [
+          "L",
+          "L",
+          "W",
+          "L",
+          "L"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "W",
+          "L",
+          "W"
+        ],
+        "awayStats": "博洛尼亚维图斯客场进攻火力起伏较大，面对魔鬼主场压迫时失误率容易攀升。",
+        "homeStats": "贝尔格莱德红星主场战斗力位居欧篮联第一梯队，防守强度与内线护框优势明显。",
+        "awayInjuries": "客场旅途消耗下替补火力衔接偏弱。",
+        "homeInjuries": "主力框架健康，主场作战战意与士气充足。",
+        "h2h": "贝红星主场胜负赔率低至 1.10，主让 8.5 分低水（1.65）设防严密，正路支撑较强。",
+        "awayMotiv": 64,
+        "homeMotiv": 85,
+        "motivationNote": "欧篮联本轮最稳主胜候选之一，主胜 6-10 分（@3.35）与 11-15 分（@4.30）为最核心分差落点。"
+      },
+      {
+        "id": "tue303",
+        "code": "周二 303",
+        "league": "欧篮联",
+        "group": "常规赛",
+        "kickoff": "11-25 03:30",
+        "kickoffIso": "2026-11-25T03:30:00+08:00",
+        "away": "帕纳辛纳",
+        "home": "巴伦西亚",
+        "awayRecord": "欧篮联",
+        "homeRecord": "欧篮联",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.75,
+          "home": 1.65
+        },
+        "initSpread": -1.5,
+        "spread": -1.5,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 175.5,
+        "total": 175.5,
+        "oddsTotal": {
+          "over": 1.74,
+          "under": 1.66
+        },
+        "sfcOdds": {
+          "away": [
+            4.4,
+            4.5,
+            7.8,
+            15,
+            24,
+            30
+          ],
+          "home": [
+            4.2,
+            4.3,
+            7.1,
+            13,
+            21,
+            26
+          ]
+        },
+        "awayForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "W"
+        ],
+        "homeForm": [
+          "W",
+          "L",
+          "W",
+          "W",
+          "L"
+        ],
+        "awayStats": "帕纳辛纳科斯球星成色与欧篮联底蕴深厚，阵地战执行力与关键球能力突出。",
+        "homeStats": "巴伦西亚主场节奏紧凑、防守纪律性高，竞彩对其主场小让 1.5 分表达出一定尊重。",
+        "awayInjuries": "阵容深度充裕，客场作战主要考验外线手感延续性。",
+        "homeInjuries": "主场以逸待劳，防守端针对性较强。",
+        "h2h": "强强对话格局，小分低水（1.66）提示双方可能陷入高强度肉搏拉锯战。",
+        "awayMotiv": 80,
+        "homeMotiv": 80,
+        "motivationNote": "主让 1.5 浅盘下胜负接近五五开，冷门指数偏高，更适合关注小分（175.5）或轻仓博弈 1-5 分险胜区间。"
+      },
+      {
+        "id": "tue304",
+        "code": "周二 304",
+        "league": "欧篮联",
+        "group": "常规赛",
+        "kickoff": "11-25 03:45",
+        "kickoffIso": "2026-11-25T03:45:00+08:00",
+        "away": "米兰",
+        "home": "阿斯维尔",
+        "awayRecord": "欧篮联",
+        "homeRecord": "欧篮联",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.65,
+          "home": 1.75
+        },
+        "initSpread": 1.5,
+        "spread": 1.5,
+        "oddsSpread": {
+          "away": 1.75,
+          "home": 1.65
+        },
+        "initTotal": 173.5,
+        "total": 173.5,
+        "oddsTotal": {
+          "over": 1.66,
+          "under": 1.74
+        },
+        "sfcOdds": {
+          "away": [
+            4.2,
+            4.3,
+            7.1,
+            13,
+            21,
+            26
+          ],
+          "home": [
+            4.4,
+            4.5,
+            7.8,
+            15,
+            24,
+            30
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "W",
+          "L",
+          "W"
+        ],
+        "homeForm": [
+          "L",
+          "W",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "米兰奥林匹亚经验丰富、外线投射点多，但本季客场稳定性存在波动。",
+        "homeStats": "阿斯维尔主场韧性不俗，受让 1.5 分且主让低水（1.65）显示机构对主队守盘有所防范。",
+        "awayInjuries": "客场连战体能与轮换衔接需留意。",
+        "homeInjuries": "主场拼抢积极，具备咬住比分的能力。",
+        "h2h": "浅盘博弈，双方实力差距微弱，大分（173.5）配低水 1.66 值得留意。",
+        "awayMotiv": 76,
+        "homeMotiv": 76,
+        "motivationNote": "客让仅 1.5 分且客让高水（1.75），米兰客场并无绝对把握，串关宜防主受让或转向大小分。"
+      },
+      {
+        "id": "tue305",
+        "code": "周二 305",
+        "league": "欧篮联",
+        "group": "常规赛",
+        "kickoff": "11-25 04:00",
+        "kickoffIso": "2026-11-25T04:00:00+08:00",
+        "away": "费内巴切",
+        "home": "巴萨",
+        "awayRecord": "欧篮联",
+        "homeRecord": "欧篮联",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.43,
+          "home": 2.09
+        },
+        "initSpread": 3.5,
+        "spread": 3.5,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 170.5,
+        "total": 170.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            3.75,
+            3.85,
+            5.9,
+            10,
+            16,
+            18
+          ],
+          "home": [
+            5.3,
+            5.5,
+            10,
+            20,
+            29,
+            40
+          ]
+        },
+        "awayForm": [
+          "W",
+          "W",
+          "W",
+          "L",
+          "W"
+        ],
+        "homeForm": [
+          "L",
+          "W",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "费内巴切攻防体系成熟、客场控制节奏能力强，能在巴塞罗那主场让出 3.5 分足见实力定位。",
+        "homeStats": "巴萨男篮近态起伏、进攻端攻坚效率不及巅峰期，主场受让 3.5 分面临考验。",
+        "awayInjuries": "整体阵容厚度在欧篮联名列前茅。",
+        "homeInjuries": "面对费内巴切高强度防守，后场失误控制是关键。",
+        "h2h": "欧篮联传统豪门对决，预设总分 170.5 为本轮最低，防守拉锯特征鲜明。",
+        "awayMotiv": 82,
+        "homeMotiv": 74,
+        "motivationNote": "费内巴切客场让出 3.5 分且独赢赔率 1.43 支撑较足，倾向客胜及 1-5 / 6-10 分段。"
+      },
+      {
+        "id": "tue306",
+        "code": "周二 306",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-25 08:00",
+        "kickoffIso": "2026-11-25T08:00:00+08:00",
+        "away": "活塞",
+        "home": "魔术",
+        "awayRecord": "10-6",
+        "homeRecord": "7-9",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.55,
+          "home": 1.87
+        },
+        "initSpread": 1.5,
+        "spread": 2.5,
+        "oddsSpread": {
+          "away": 1.65,
+          "home": 1.75
+        },
+        "initTotal": 213.5,
+        "total": 214.5,
+        "oddsTotal": {
+          "over": 1.74,
+          "under": 1.66
+        },
+        "sfcOdds": {
+          "away": [
+            4.25,
+            4.4,
+            7.3,
+            10,
+            18,
+            20
+          ],
+          "home": [
+            4.6,
+            4.75,
+            8.7,
+            14,
+            24,
+            30
+          ]
+        },
+        "awayForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "W"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "W",
+          "L",
+          "W"
+        ],
+        "awayStats": "活塞赛季 10 胜 6 负势头强劲，攻防两端年轻活力十足；竞彩由外盘客让 1.5 升至客让 2.5 且客让低水（1.65）。",
+        "homeStats": "魔术赛季 7 胜 9 负但近 5 战赢下 4 场（近 6 主场仅 2 场打出大分），主场防守极具韧性。",
+        "awayInjuries": "核心控卫凯德·康宁汉姆因膝伤列为每日观察（DTD），赛前临场出场状态需重点确认。",
+        "homeInjuries": "头号球星保罗·班凯罗继续缺阵，魔术阵地战硬解能力明显受损。",
+        "h2h": "两队均为防守硬朗、节奏偏慢的东部球队，竞彩小分 214.5 给到 1.66 低水设防。",
+        "awayMotiv": 80,
+        "homeMotiv": 76,
+        "motivationNote": "魔术缺班凯罗是最大基本面劣势，活塞客让升至 2.5 分且低水；若康宁汉姆确认出战则活塞客胜与小分方向均具价值。"
+      },
+      {
+        "id": "tue307",
+        "code": "周二 307",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-25 09:00",
+        "kickoffIso": "2026-11-25T09:00:00+08:00",
+        "away": "凯尔特人",
+        "home": "奇才",
+        "awayRecord": "11-6",
+        "homeRecord": "7-11",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.1,
+          "home": 3.7
+        },
+        "initSpread": 5.5,
+        "spread": 9.5,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 230.5,
+        "total": 219.5,
+        "oddsTotal": {
+          "over": 1.62,
+          "under": 1.78
+        },
+        "sfcOdds": {
+          "away": [
+            6,
+            3.7,
+            4,
+            5.6,
+            7.8,
+            6.5
+          ],
+          "home": [
+            8.8,
+            10,
+            18,
+            25,
+            48,
+            60
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "W",
+          "W",
+          "L"
+        ],
+        "homeForm": [
+          "W",
+          "L",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "凯尔特人 11 胜 6 负（让分盘 7-10 ATS），塔图姆场均 26.4 分、怀特 12.8 分；客场 10 战仅 2 场打出大分（小分率 80%），本场力争止客场 3 连败。",
+        "homeStats": "奇才 7 胜 11 负（让分盘 9-9 ATS，大小分 6 大 12 小），安东尼·戴维斯场均 25.1 分、特雷·杨 17.1 分、新秀 AJ·迪班萨 16.5 分，刚大胜魔术士气回升。",
+        "awayInjuries": "主力框架健康，防守轮转纪律性强。",
+        "homeInjuries": "盘口出现剧烈异动：初盘绿军仅客让 5.5 分、总分 230.5，临场暴涨至客让 9.5~10.5 分、总分骤降 11 分至 219.5，需高度警惕奇才主力临场轮休/伤停。",
+        "h2h": "凯尔特人对奇才已取得交锋 7 连胜，最近 3 次交手绿军均以两位数让分压制对手。",
+        "awayMotiv": 84,
+        "homeMotiv": 68,
+        "motivationNote": "盘口异动极大（让分翻倍深化 + 总分骤降 11 分），机构对凯尔特人客场止颓取胜高度防范，同时留意竞彩 219.5 总分已下探极深后的反弹风险。"
+      },
+      {
+        "id": "tue308",
+        "code": "周二 308",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-25 11:00",
+        "kickoffIso": "2026-11-25T11:00:00+08:00",
+        "away": "独行侠",
+        "home": "掘金",
+        "awayRecord": "8-7",
+        "homeRecord": "9-5",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 3.32,
+          "home": 1.14
+        },
+        "initSpread": -8.5,
+        "spread": -7.5,
+        "oddsSpread": {
+          "away": 1.75,
+          "home": 1.65
+        },
+        "initTotal": 237.5,
+        "total": 232.5,
+        "oddsTotal": {
+          "over": 1.66,
+          "under": 1.74
+        },
+        "sfcOdds": {
+          "away": [
+            7.7,
+            8.2,
+            19,
+            28,
+            40,
+            50
+          ],
+          "home": [
+            5.05,
+            3.55,
+            4.2,
+            6.2,
+            8.9,
+            8.5
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "W",
+          "W",
+          "L"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "W"
+        ],
+        "awayStats": "独行侠赛季 8 胜 7 负，但目前有多达 5 名球员进入伤病缺阵名单，客场高原作战轮换吃紧。",
+        "homeStats": "掘金赛季 9 胜 5 负、近 5 战 4 胜 1 负状态正佳，投篮命中率高达 48%，主场近 7 战 4 场打出大分，丹佛高原主场优势显著。",
+        "awayInjuries": "多达 5 名球员缺阵，阵容完整性明显落于下风。",
+        "homeInjuries": "仅斯特劳瑟等个别轮换缺阵，核心主力框架齐整。",
+        "h2h": "掘金高原主场胜率高，竞彩主让 7.5 分配低水（1.65）且独赢 1.14，稳胆属性突出。",
+        "awayMotiv": 70,
+        "homeMotiv": 86,
+        "motivationNote": "外盘主让 8.5、竞彩主让 7.5 低水（1.65），面对缺兵少将的独行侠，掘金主场取胜概率高，重点关注主胜 6-10（@3.55）与 11-15（@4.20）分段。"
+      }
+    ]
+  },
+  "results": {
+    "mon301": {
+      "awayPts": 117,
+      "homePts": 111
+    },
+    "mon302": {
+      "awayPts": 128,
+      "homePts": 111
+    },
+    "mon303": {
+      "awayPts": 120,
+      "homePts": 125
+    },
+    "mon304": {
+      "awayPts": 116,
+      "homePts": 111
+    },
+    "mon305": {
+      "awayPts": 116,
+      "homePts": 142
+    },
+    "mon306": {
+      "awayPts": 108,
+      "homePts": 122
+    },
+    "mon307": {
+      "awayPts": 123,
+      "homePts": 119
+    },
+    "mon308": {
+      "awayPts": 104,
+      "homePts": 116
+    },
+    "mon309": {
+      "awayPts": 123,
+      "homePts": 107
+    },
+    "mon310": {
+      "awayPts": 94,
+      "homePts": 109
     }
-
-
-def merge_store(store, incoming_by_date, all_scores, team_records):
-    issues = store.setdefault("issuesByDate", {})
-    results = store.setdefault("results", {})
-    added_m, upd_o, hit_s = 0, 0, 0
-
-    for d_str, inc_list in (incoming_by_date or {}).items():
-        cur_list = issues.setdefault(d_str, [])
-        for inc in inc_list:
-            ia, ih = normalize_team(inc.get("away")), normalize_team(inc.get("home"))
-            idx = next(
-                (i for i, m in enumerate(cur_list)
-                 if normalize_team(m.get("away")) == ia and normalize_team(m.get("home")) == ih),
-                None,
-            )
-            if idx is not None:
-                for k in ("sfOpen", "oddsSf", "spread", "oddsSpread", "total", "oddsTotal", "sfcOdds", "kickoff", "kickoffIso", "awayRecord", "homeRecord"):
-                    if inc.get(k) is not None and inc.get(k) != "--":
-                        cur_list[idx][k] = inc[k]
-                upd_o += 1
-            else:
-                cur_list.append(build_default_match(inc))
-                added_m += 1
-
-    for d_str, m_list in issues.items():
-        for m in m_list:
-            ma, mh = normalize_team(m.get("away")), normalize_team(m.get("home"))
-            m_code = (m.get("code") or "").replace(" ", "")
-            if ma in team_records:
-                m["awayRecord"] = team_records[ma]
-            if mh in team_records:
-                m["homeRecord"] = team_records[mh]
-            for sc in all_scores:
-                code_ok = bool(sc.get("code") and m_code and sc["code"].replace(" ", "") == m_code)
-                team_ok = bool(normalize_team(sc.get("away")) == ma and normalize_team(sc.get("home")) == mh)
-                if code_ok or team_ok:
-                    results[m["id"]] = {"awayPts": sc["awayPts"], "homePts": sc["homePts"]}
-                    hit_s += 1
-                    break
-
-    return added_m, upd_o, hit_s
-
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--self-test", action="store_true")
-    args, _ = parser.parse_known_args()
-
-    if args.self_test:
-        st = {"meta": {}, "issuesByDate": {"2026-11-24": [{"id": "tue306", "code": "周二 306", "away": "活塞", "home": "魔术", "spread": 2.5}]}, "results": {}}
-        _, _, hits = merge_store(st, {}, [{"away": "底特律活塞", "home": "奥兰多魔术", "awayPts": 104, "homePts": 86}], {"活塞": "11-6"})
-        assert hits == 1 and st["results"]["tue306"] == {"awayPts": 104, "homePts": 86}
-        print("SELF-TEST PASSED: DATA_PATH =", DATA_PATH)
-        return 0
-
-    if os.path.exists(DATA_PATH):
-        with open(DATA_PATH, "r", encoding="utf-8") as f:
-            store = json.load(f)
-    else:
-        store = {"meta": {}, "issuesByDate": {}, "results": {}}
-
-    channels_ok, channels_err = [], []
-    incoming_by_date, all_scores, team_records = {}, [], {}
-
-    with ThreadPoolExecutor(max_workers=2) as pool:
-        f_espn = pool.submit(fetch_espn_nba_all)
-        f_163 = pool.submit(fetch_163_results)
-
-        try:
-            up, sc, rec = f_espn.result(timeout=20)
-            incoming_by_date.update(up)
-            all_scores.extend(sc)
-            team_records.update(rec)
-            channels_ok.append("espn_nba_all")
-            print(f"[OK] espn_nba_all: 新赛程 {sum(len(v) for v in up.values())} 场, 完场 {len(sc)} 场, 战绩 {len(rec)} 队")
-        except Exception as e:
-            channels_err.append(f"espn_nba_all: {e}")
-            print(f"[WARN] espn_nba_all: {e}")
-
-        try:
-            r163 = f_163.result(timeout=12)
-            if r163:
-                all_scores.extend(r163)
-                channels_ok.append("163_results")
-                print(f"[OK] 163_results: 完场 {len(r163)} 场")
-        except Exception as e:
-            channels_err.append(f"163_results: {e}")
-
-    added_m, upd_o, hit_s = merge_store(store, incoming_by_date, all_scores, team_records)
-    store["meta"] = {
-        "updatedAt": bjt_now().strftime("%Y-%m-%d %H:%M:%S +08:00"),
-        "runner": "github-actions",
-        "channelsOk": channels_ok,
-        "channelsError": channels_err,
-        "stats": {"addedMatches": added_m, "updatedOdds": upd_o, "matchedScores": hit_s},
-    }
-
-    os.makedirs(os.path.dirname(DATA_PATH), exist_ok=True)
-    with open(DATA_PATH, "w", encoding="utf-8") as f:
-        json.dump(store, f, ensure_ascii=False, indent=2)
-
-    print(f"[SUCCESS] 已更新 {DATA_PATH} (新增{added_m}场 / 更新赔率{upd_o}场 / 匹配赛果{hit_s}场)")
-    return 0
-
-
-if __name__ == "__main__":
-    sys.exit(main())
+  }
+}
