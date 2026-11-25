@@ -1,13 +1,13 @@
 {
   "meta": {
-    "updatedAt": "2026-11-24 14:46:00 +08:00",
+    "updatedAt": "2026-11-25 12:29:55 +08:00",
     "channelsOk": [
-      "netease_jclq_bet",
-      "inquirer_nba_scores",
-      "nbcsports",
-      "fanduel"
+      "espn_nba_scoreboard"
     ],
-    "channelsError": []
+    "channelsError": [
+      "sporttery_odds_api: <urlopen error [Errno -5] No address associated with hostname>",
+      "sporttery_results_api: <urlopen error [Errno -5] No address associated with hostname>"
+    ]
   },
   "issuesByDate": {
     "2026-11-23": [
@@ -20,8 +20,8 @@
         "kickoffIso": "2026-11-24T08:00:00+08:00",
         "away": "灰熊",
         "home": "黄蜂",
-        "awayRecord": "12-5",
-        "homeRecord": "4-11",
+        "awayRecord": "13-5",
+        "homeRecord": "4-12",
         "sfOpen": true,
         "oddsSf": {
           "away": 1.29,
@@ -89,8 +89,8 @@
         "kickoffIso": "2026-11-24T08:00:00+08:00",
         "away": "开拓者",
         "home": "76人",
-        "awayRecord": "客场连战",
-        "homeRecord": "14-3",
+        "awayRecord": "11-6",
+        "homeRecord": "14-4",
         "sfOpen": true,
         "oddsSf": {
           "away": 2.48,
@@ -158,8 +158,8 @@
         "kickoffIso": "2026-11-24T08:30:00+08:00",
         "away": "雷霆",
         "home": "步行者",
-        "awayRecord": "近7战2-5",
-        "homeRecord": "4连败",
+        "awayRecord": "10-8",
+        "homeRecord": "6-12",
         "sfOpen": true,
         "oddsSf": {
           "away": 1.4,
@@ -227,8 +227,8 @@
         "kickoffIso": "2026-11-24T08:30:00+08:00",
         "away": "雄鹿",
         "home": "猛龙",
-        "awayRecord": "1-16",
-        "homeRecord": "6-10",
+        "awayRecord": "2-16",
+        "homeRecord": "6-11",
         "sfOpen": true,
         "oddsSf": {
           "away": 3.95,
@@ -296,8 +296,8 @@
         "kickoffIso": "2026-11-24T08:30:00+08:00",
         "away": "篮网",
         "home": "森林狼",
-        "awayRecord": "3-12",
-        "homeRecord": "8连主收官",
+        "awayRecord": "3-13",
+        "homeRecord": "13-5",
         "sfOpen": true,
         "oddsSf": {
           "away": 5.05,
@@ -365,8 +365,8 @@
         "kickoffIso": "2026-11-24T09:00:00+08:00",
         "away": "骑士",
         "home": "公牛",
-        "awayRecord": "9-8",
-        "homeRecord": "4-12",
+        "awayRecord": "9-9",
+        "homeRecord": "5-12",
         "sfOpen": true,
         "oddsSf": {
           "away": 1.12,
@@ -434,8 +434,8 @@
         "kickoffIso": "2026-11-24T09:00:00+08:00",
         "away": "太阳",
         "home": "鹈鹕",
-        "awayRecord": "8-7",
-        "homeRecord": "5-13",
+        "awayRecord": "9-7",
+        "homeRecord": "5-14",
         "sfOpen": true,
         "oddsSf": {
           "away": 1.29,
@@ -503,8 +503,8 @@
         "kickoffIso": "2026-11-24T09:30:00+08:00",
         "away": "快船",
         "home": "火箭",
-        "awayRecord": "4-11",
-        "homeRecord": "12-5",
+        "awayRecord": "4-12",
+        "homeRecord": "13-5",
         "sfOpen": false,
         "oddsSf": {
           "away": null,
@@ -572,8 +572,8 @@
         "kickoffIso": "2026-11-24T11:00:00+08:00",
         "away": "马刺",
         "home": "国王",
-        "awayRecord": "14-3",
-        "homeRecord": "2-14",
+        "awayRecord": "15-3",
+        "homeRecord": "2-15",
         "sfOpen": false,
         "oddsSf": {
           "away": null,
@@ -641,8 +641,8 @@
         "kickoffIso": "2026-11-24T11:00:00+08:00",
         "away": "爵士",
         "home": "湖人",
-        "awayRecord": "3-15",
-        "homeRecord": "14-3",
+        "awayRecord": "3-16",
+        "homeRecord": "15-3",
         "sfOpen": false,
         "oddsSf": {
           "away": null,
@@ -1057,8 +1057,8 @@
         "kickoffIso": "2026-11-25T08:00:00+08:00",
         "away": "活塞",
         "home": "魔术",
-        "awayRecord": "10-6",
-        "homeRecord": "7-9",
+        "awayRecord": "11-6",
+        "homeRecord": "7-10",
         "sfOpen": true,
         "oddsSf": {
           "away": 1.55,
@@ -1126,8 +1126,8 @@
         "kickoffIso": "2026-11-25T09:00:00+08:00",
         "away": "凯尔特人",
         "home": "奇才",
-        "awayRecord": "11-6",
-        "homeRecord": "7-11",
+        "awayRecord": "12-6",
+        "homeRecord": "7-12",
         "sfOpen": true,
         "oddsSf": {
           "away": 1.1,
@@ -1195,8 +1195,8 @@
         "kickoffIso": "2026-11-25T11:00:00+08:00",
         "away": "独行侠",
         "home": "掘金",
-        "awayRecord": "8-7",
-        "homeRecord": "9-5",
+        "awayRecord": "10-7",
+        "homeRecord": "10-5",
         "sfOpen": true,
         "oddsSf": {
           "away": 3.32,
@@ -1297,6 +1297,14 @@
     "mon310": {
       "awayPts": 94,
       "homePts": 109
+    },
+    "tue306": {
+      "awayPts": 104,
+      "homePts": 86
+    },
+    "tue307": {
+      "awayPts": 131,
+      "homePts": 116
     }
   }
 }
