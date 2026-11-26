@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-11-26 18:57:09 +08:00",
+    "updatedAt": "2026-11-26 22:49:59 +08:00",
     "runner": "github-actions",
     "channelsOk": [
       "espn_nba_all"
@@ -1906,7 +1906,7 @@
           "home": 1.7
         },
         "initTotal": 223.5,
-        "total": 224.5,
+        "total": 223.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
@@ -2182,7 +2182,7 @@
           "home": 1.7
         },
         "initTotal": 221.5,
-        "total": 220.5,
+        "total": 221.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
@@ -2458,7 +2458,7 @@
           "home": 1.7
         },
         "initTotal": 228.5,
-        "total": 227.5,
+        "total": 228.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
