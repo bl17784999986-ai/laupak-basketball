@@ -1,15 +1,15 @@
 {
   "meta": {
-    "updatedAt": "2026-11-27 12:31:03 +08:00",
+    "updatedAt": "2026-11-27 15:52:01 +08:00",
     "runner": "github-actions",
     "channelsOk": [
       "espn_nba_all"
     ],
     "channelsError": [],
     "stats": {
-      "addedMatches": 0,
+      "addedMatches": 5,
       "updatedOdds": 11,
-      "matchedScores": 9
+      "matchedScores": 0
     }
   },
   "issuesByDate": {
@@ -1965,37 +1965,37 @@
         "homeRecord": "11-6",
         "sfOpen": true,
         "oddsSf": {
-          "away": 4.35,
-          "home": 1.12
+          "away": 3.87,
+          "home": 1.16
         },
         "initSpread": 0.0,
-        "spread": -9.5,
+        "spread": -8.5,
         "oddsSpread": {
           "away": 1.7,
           "home": 1.7
         },
         "initTotal": 222.5,
-        "total": 219.5,
+        "total": 218.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
         },
         "sfcOdds": {
           "away": [
-            8.83,
-            15.44,
-            32.5,
-            82.43,
+            8.08,
+            13.6,
+            27.59,
+            67.42,
             99.0,
             99.0
           ],
           "home": [
-            5.78,
-            4.98,
-            5.17,
-            6.46,
-            9.73,
-            10.36
+            5.53,
+            4.94,
+            5.33,
+            6.91,
+            10.8,
+            12.2
           ]
         },
         "awayForm": [
@@ -2034,17 +2034,17 @@
         "homeRecord": "6-12",
         "sfOpen": true,
         "oddsSf": {
-          "away": 1.52,
-          "home": 2.15
+          "away": 1.44,
+          "home": 2.34
         },
         "initSpread": 4.5,
-        "spread": 2.5,
+        "spread": 3.5,
         "oddsSpread": {
           "away": 1.7,
           "home": 1.7
         },
         "initTotal": 234.5,
-        "total": 232.5,
+        "total": 230.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
@@ -2052,18 +2052,18 @@
         "sfcOdds": {
           "away": [
             4.94,
-            5.53,
-            7.44,
-            12.08,
-            23.6,
-            37.36
+            5.33,
+            6.91,
+            10.8,
+            20.34,
+            30.5
           ],
           "home": [
-            5.53,
-            7.44,
-            12.08,
-            23.6,
-            55.56,
+            5.78,
+            8.08,
+            13.6,
+            27.59,
+            67.42,
             99.0
           ]
         },
@@ -2389,7 +2389,7 @@
           "home": 1.7
         },
         "initTotal": 225.5,
-        "total": 225.5,
+        "total": 224.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
@@ -2448,35 +2448,35 @@
         "homeRecord": "3-16",
         "sfOpen": true,
         "oddsSf": {
-          "away": 1.12,
-          "home": 4.35
+          "away": 1.09,
+          "home": 4.93
         },
         "initSpread": 9.5,
-        "spread": 9.5,
+        "spread": 10.5,
         "oddsSpread": {
           "away": 1.7,
           "home": 1.7
         },
         "initTotal": 228.5,
-        "total": 228.5,
+        "total": 229.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
         },
         "sfcOdds": {
           "away": [
-            5.78,
-            4.98,
-            5.17,
-            6.46,
-            9.73,
-            10.36
+            6.09,
+            5.06,
+            5.06,
+            6.09,
+            8.83,
+            8.85
           ],
           "home": [
-            8.83,
-            15.44,
-            32.5,
-            82.43,
+            9.73,
+            17.65,
+            38.58,
+            99.0,
             99.0,
             99.0
           ]
@@ -2638,6 +2638,353 @@
         "awayInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
         "homeInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
         "h2h": "勇士(客) VS 开拓者(主)：主让 +0.0 / 预设总分 222.5。",
+        "awayMotiv": 72,
+        "homeMotiv": 72,
+        "motivationNote": "GitHub Actions 自动同步：主让 +0.0，预设总分 222.5。"
+      }
+    ],
+    "2026-11-28": [
+      {
+        "id": "espn_20261128_301",
+        "code": "周六 301",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-29 06:00",
+        "kickoffIso": "2026-11-29T06:00:00+08:00",
+        "away": "魔术",
+        "home": "奇才",
+        "awayRecord": "7-10",
+        "homeRecord": "7-12",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.78,
+          "home": 1.78
+        },
+        "initSpread": 0.0,
+        "spread": 0.0,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 222.5,
+        "total": 222.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ],
+          "home": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "W",
+          "L",
+          "W"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "魔术（赛季 7-10），已自动接入最新让分与大小分盘口。",
+        "homeStats": "奇才（赛季 7-12），已自动接入最新让分与大小分盘口。",
+        "awayInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "homeInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "h2h": "魔术(客) VS 奇才(主)：主让 +0.0 / 预设总分 222.5。",
+        "awayMotiv": 72,
+        "homeMotiv": 72,
+        "motivationNote": "GitHub Actions 自动同步：主让 +0.0，预设总分 222.5。"
+      },
+      {
+        "id": "espn_20261128_302",
+        "code": "周六 302",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-29 07:00",
+        "kickoffIso": "2026-11-29T07:00:00+08:00",
+        "away": "篮网",
+        "home": "黄蜂",
+        "awayRecord": "4-13",
+        "homeRecord": "4-13",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.78,
+          "home": 1.78
+        },
+        "initSpread": 0.0,
+        "spread": 0.0,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 222.5,
+        "total": 222.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ],
+          "home": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "W",
+          "L",
+          "W"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "篮网（赛季 4-13），已自动接入最新让分与大小分盘口。",
+        "homeStats": "黄蜂（赛季 4-13），已自动接入最新让分与大小分盘口。",
+        "awayInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "homeInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "h2h": "篮网(客) VS 黄蜂(主)：主让 +0.0 / 预设总分 222.5。",
+        "awayMotiv": 72,
+        "homeMotiv": 72,
+        "motivationNote": "GitHub Actions 自动同步：主让 +0.0，预设总分 222.5。"
+      },
+      {
+        "id": "espn_20261128_303",
+        "code": "周六 303",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-29 09:00",
+        "kickoffIso": "2026-11-29T09:00:00+08:00",
+        "away": "步行者",
+        "home": "公牛",
+        "awayRecord": "6-12",
+        "homeRecord": "6-12",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.78,
+          "home": 1.78
+        },
+        "initSpread": 0.0,
+        "spread": 0.0,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 222.5,
+        "total": 222.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ],
+          "home": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "W",
+          "L",
+          "W"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "步行者（赛季 6-12），已自动接入最新让分与大小分盘口。",
+        "homeStats": "公牛（赛季 6-12），已自动接入最新让分与大小分盘口。",
+        "awayInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "homeInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "h2h": "步行者(客) VS 公牛(主)：主让 +0.0 / 预设总分 222.5。",
+        "awayMotiv": 72,
+        "homeMotiv": 72,
+        "motivationNote": "GitHub Actions 自动同步：主让 +0.0，预设总分 222.5。"
+      },
+      {
+        "id": "espn_20261128_304",
+        "code": "周六 304",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-29 09:00",
+        "kickoffIso": "2026-11-29T09:00:00+08:00",
+        "away": "雷霆",
+        "home": "雄鹿",
+        "awayRecord": "10-9",
+        "homeRecord": "2-17",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.78,
+          "home": 1.78
+        },
+        "initSpread": 0.0,
+        "spread": 0.0,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 222.5,
+        "total": 222.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ],
+          "home": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "W",
+          "L",
+          "W"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "雷霆（赛季 10-9），已自动接入最新让分与大小分盘口。",
+        "homeStats": "雄鹿（赛季 2-17），已自动接入最新让分与大小分盘口。",
+        "awayInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "homeInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "h2h": "雷霆(客) VS 雄鹿(主)：主让 +0.0 / 预设总分 222.5。",
+        "awayMotiv": 72,
+        "homeMotiv": 72,
+        "motivationNote": "GitHub Actions 自动同步：主让 +0.0，预设总分 222.5。"
+      },
+      {
+        "id": "espn_20261128_305",
+        "code": "周六 305",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-29 09:30",
+        "kickoffIso": "2026-11-29T09:30:00+08:00",
+        "away": "76人",
+        "home": "火箭",
+        "awayRecord": "15-4",
+        "homeRecord": "14-5",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.78,
+          "home": 1.78
+        },
+        "initSpread": 0.0,
+        "spread": 0.0,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 222.5,
+        "total": 222.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ],
+          "home": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "W",
+          "L",
+          "W"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "76人（赛季 15-4），已自动接入最新让分与大小分盘口。",
+        "homeStats": "火箭（赛季 14-5），已自动接入最新让分与大小分盘口。",
+        "awayInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "homeInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "h2h": "76人(客) VS 火箭(主)：主让 +0.0 / 预设总分 222.5。",
         "awayMotiv": 72,
         "homeMotiv": 72,
         "motivationNote": "GitHub Actions 自动同步：主让 +0.0，预设总分 222.5。"
