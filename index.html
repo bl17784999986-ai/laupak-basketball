@@ -336,12 +336,18 @@
             </h2>
             <p class="text-[11px] text-slate-400 mt-0.5">全量胜负 / 让分 / 大小分 / 胜分差推荐与命中率统计</p>
           </div>
-          <select id="slateReviewFilter" class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-orange-500">
-            <option value="ALL">全部场次</option>
-            <option value="FINISHED">仅看已完场</option>
-            <option value="SF_HIT">胜负中红</option>
-            <option value="SF_MISS">胜负中黑</option>
-          </select>
+          <div class="flex items-center gap-1.5">
+            <select id="slateReviewFilter" class="flex-1 min-w-0 px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-orange-500">
+              <option value="ALL">全部场次</option>
+              <option value="FINISHED">仅看已完场</option>
+              <option value="SF_HIT">胜负中红</option>
+              <option value="SF_MISS">胜负中黑</option>
+            </select>
+            <button id="btnExportAllSlate" type="button" class="shrink-0 whitespace-nowrap px-2.5 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-xs font-semibold transition flex items-center gap-1">
+              <span>📤</span>
+              <span>一键导出全部推盘</span>
+            </button>
+          </div>
         </div>
 
         <!-- 4 Accuracy KPIs -->
@@ -2780,6 +2786,87 @@
     });
     document.getElementById('reviewFilterStatus').addEventListener('change', renderReviewSection);
     document.getElementById('slateReviewFilter').addEventListener('change', renderSlateReviewPanel);
+
+    document.getElementById('btnExportAllSlate').addEventListener('click', () => {
+      if (!matches || !matches.length) {
+        showToast('当前期次暂无赛事推盘可导出');
+        return;
+      }
+      let finCnt = 0, sfHit = 0, spHit = 0, totHit = 0, sfcHit = 0;
+      const blocks = matches.map((m, idx) => {
+        const a = computeAnalysis(m);
+        const res = matchResults[m.id];
+        const hasRes = res && res.awayPts !== '' && res.homePts !== '' && res.awayPts !== undefined && res.homePts !== undefined;
+        const predSf = a.favoredSide === 'home' ? '主胜' : '客胜';
+        const predSpreadHome = a.probHomeSpread >= a.probAwaySpread;
+        const spTxt = m.spread > 0 ? `+${m.spread}` : `${m.spread}`;
+        const predSpreadLabel = predSpreadHome ? `让分主胜(${spTxt})` : `让分客胜(${spTxt})`;
+        const predOver = a.probOver >= a.probUnder;
+        const predTotalLabel = predOver ? `大分(${m.total})` : `小分(${m.total})`;
+        const predMargins = a.topMargins.map(x => x.label);
+
+        let statusLine = `开赛 ${m.kickoff} | 待开`;
+        let sfTag = '', spTag = '', totTag = '', sfcTag = '';
+        if (hasRes) {
+          finCnt++;
+          const ob = getOfficialResultBreakdown(m, res);
+          const h1 = ob.sfLabel === predSf;
+          const h2 = ob.hcHomeWin === predSpreadHome;
+          const h3 = ob.isOver === predOver;
+          const h4 = predMargins.includes(ob.sfcLabel);
+          if (h1) sfHit++;
+          if (h2) spHit++;
+          if (h3) totHit++;
+          if (h4) sfcHit++;
+          statusLine = `完场 ${ob.ap}:${ob.hp}（总分 ${ob.ap + ob.hp}）`;
+          sfTag = ` [${h1 ? '中红' : '中黑'} · 实:${ob.sfLabel}]`;
+          spTag = ` [${h2 ? '中红' : '中黑'} · 实:${ob.hcLabel}]`;
+          totTag = ` [${h3 ? '中红' : '中黑'} · 实:${ob.totLabel}]`;
+          sfcTag = ` [${h4 ? '中红' : '中黑'} · 实:${ob.sfcLabel}]`;
+        }
+        const noteLine = slateNotes[m.id] ? `\n  • 复盘笔记：${slateNotes[m.id]}` : '';
+        return [
+          `${idx + 1}. 【${m.code} ${m.league}】${m.away}(客) VS ${m.home}(主) | ${statusLine}`,
+          `  • 胜负推荐：${predSf}（客${a.probAway}% / 主${a.probHome}%）${sfTag}`,
+          `  • 让分推荐：${predSpreadLabel}（让客${a.probAwaySpread}% / 让主${a.probHomeSpread}%）${spTag}`,
+          `  • 大小分推荐：${predTotalLabel}（大${a.probOver}% / 小${a.probUnder}%）${totTag}`,
+          `  • 高频胜分差：${a.topMargins.map(x => `${x.label}@${x.odds.toFixed(2)}`).join(' / ')}${sfcTag}`,
+          `  • 冷门预警：${a.upsetLevel} (${a.upsetScore}/100)${noteLine}`
+        ].join('\n');
+      });
+
+      const headerLines = [
+        `==================================================`,
+        `竞彩篮球当期全盘推演汇总 · ${activeDate}（共 ${matches.length} 场）`,
+        finCnt > 0
+          ? `已完场统计 (${finCnt}场)：胜负 ${Math.round(sfHit/finCnt*100)}% (${sfHit}/${finCnt}) | 让分 ${Math.round(spHit/finCnt*100)}% (${spHit}/${finCnt}) | 大小分 ${Math.round(totHit/finCnt*100)}% (${totHit}/${finCnt}) | Top3分差 ${Math.round(sfcHit/finCnt*100)}% (${sfcHit}/${finCnt})`
+          : `导出时间：${new Date().toLocaleString('zh-CN', { hour12: false })}`,
+        `==================================================`,
+        ''
+      ];
+      const fullText = headerLines.join('\n') + blocks.join('\n\n') + '\n';
+
+      // 1) 复制到剪贴板
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(fullText).catch(() => fallbackCopy(fullText));
+      } else {
+        fallbackCopy(fullText);
+      }
+      // 2) 自动下载为 .txt 文本文件
+      try {
+        const blob = new Blob([fullText], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const aEl = document.createElement('a');
+        aEl.href = url;
+        aEl.download = `竞彩篮球全盘推演_${activeDate}.txt`;
+        document.body.appendChild(aEl);
+        aEl.click();
+        document.body.removeChild(aEl);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      } catch (e) {}
+
+      showToast(`已一键导出 ${activeDate} 全部 ${matches.length} 场推盘（已复制并下载 TXT）`);
+    });
 
     document.getElementById('btnExportReview').addEventListener('click', () => {
       if (!reviewRecords.length) { showToast('暂无复盘记录可导出'); return; }
