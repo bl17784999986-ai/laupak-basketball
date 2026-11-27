@@ -1,14 +1,14 @@
 {
   "meta": {
-    "updatedAt": "2026-11-27 15:52:01 +08:00",
+    "updatedAt": "2026-11-27 18:53:46 +08:00",
     "runner": "github-actions",
     "channelsOk": [
       "espn_nba_all"
     ],
     "channelsError": [],
     "stats": {
-      "addedMatches": 5,
-      "updatedOdds": 11,
+      "addedMatches": 0,
+      "updatedOdds": 16,
       "matchedScores": 0
     }
   },
@@ -2113,7 +2113,7 @@
           "home": 1.7
         },
         "initTotal": 222.5,
-        "total": 219.5,
+        "total": 220.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
@@ -2172,11 +2172,11 @@
         "homeRecord": "12-6",
         "sfOpen": true,
         "oddsSf": {
-          "away": 4.35,
-          "home": 1.12
+          "away": 3.87,
+          "home": 1.16
         },
         "initSpread": -9.5,
-        "spread": -9.5,
+        "spread": -8.5,
         "oddsSpread": {
           "away": 1.7,
           "home": 1.7
@@ -2189,20 +2189,20 @@
         },
         "sfcOdds": {
           "away": [
-            8.83,
-            15.44,
-            32.5,
-            82.43,
+            8.08,
+            13.6,
+            27.59,
+            67.42,
             99.0,
             99.0
           ],
           "home": [
-            5.78,
-            4.98,
-            5.17,
-            6.46,
-            9.73,
-            10.36
+            5.53,
+            4.94,
+            5.33,
+            6.91,
+            10.8,
+            12.2
           ]
         },
         "awayForm": [
@@ -2310,37 +2310,37 @@
         "homeRecord": "9-8",
         "sfOpen": true,
         "oddsSf": {
-          "away": 2.15,
-          "home": 1.52
+          "away": 1.99,
+          "home": 1.61
         },
         "initSpread": 0.0,
-        "spread": -2.5,
+        "spread": -1.5,
         "oddsSpread": {
           "away": 1.7,
           "home": 1.7
         },
         "initTotal": 222.5,
-        "total": 227.5,
+        "total": 226.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
         },
         "sfcOdds": {
           "away": [
-            5.53,
-            7.44,
-            12.08,
-            23.6,
-            55.56,
-            99.0
+            5.33,
+            6.91,
+            10.8,
+            20.34,
+            46.12,
+            90.03
           ],
           "home": [
-            4.94,
-            5.53,
-            7.44,
-            12.08,
-            23.6,
-            37.36
+            4.98,
+            5.78,
+            8.08,
+            13.6,
+            27.59,
+            46.08
           ]
         },
         "awayForm": [
@@ -2389,7 +2389,7 @@
           "home": 1.7
         },
         "initTotal": 225.5,
-        "total": 224.5,
+        "total": 225.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
@@ -2448,11 +2448,11 @@
         "homeRecord": "3-16",
         "sfOpen": true,
         "oddsSf": {
-          "away": 1.09,
-          "home": 4.93
+          "away": 1.12,
+          "home": 4.35
         },
         "initSpread": 9.5,
-        "spread": 10.5,
+        "spread": 9.5,
         "oddsSpread": {
           "away": 1.7,
           "home": 1.7
@@ -2465,18 +2465,18 @@
         },
         "sfcOdds": {
           "away": [
-            6.09,
-            5.06,
-            5.06,
-            6.09,
-            8.83,
-            8.85
+            5.78,
+            4.98,
+            5.17,
+            6.46,
+            9.73,
+            10.36
           ],
           "home": [
-            9.73,
-            17.65,
-            38.58,
-            99.0,
+            8.83,
+            15.44,
+            32.5,
+            82.43,
             99.0,
             99.0
           ]
@@ -2586,37 +2586,37 @@
         "homeRecord": "12-6",
         "sfOpen": true,
         "oddsSf": {
-          "away": 4.35,
-          "home": 1.12
+          "away": 3.87,
+          "home": 1.16
         },
         "initSpread": 0.0,
-        "spread": -9.5,
+        "spread": -8.5,
         "oddsSpread": {
           "away": 1.7,
           "home": 1.7
         },
         "initTotal": 222.5,
-        "total": 220.5,
+        "total": 221.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
         },
         "sfcOdds": {
           "away": [
-            8.83,
-            15.44,
-            32.5,
-            82.43,
+            8.08,
+            13.6,
+            27.59,
+            67.42,
             99.0,
             99.0
           ],
           "home": [
-            5.78,
-            4.98,
-            5.17,
-            6.46,
-            9.73,
-            10.36
+            5.53,
+            4.94,
+            5.33,
+            6.91,
+            10.8,
+            12.2
           ]
         },
         "awayForm": [
