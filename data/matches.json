@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updatedAt": "2026-11-28 07:41:12 +08:00",
+    "updatedAt": "2026-11-28 12:25:32 +08:00",
     "runner": "github-actions",
     "channelsOk": [
       "espn_nba_all"
@@ -8,8 +8,8 @@
     "channelsError": [],
     "stats": {
       "addedMatches": 0,
-      "updatedOdds": 16,
-      "matchedScores": 0
+      "updatedOdds": 10,
+      "matchedScores": 6
     }
   },
   "issuesByDate": {
@@ -23,7 +23,7 @@
         "kickoffIso": "2026-11-24T08:00:00+08:00",
         "away": "灰熊",
         "home": "黄蜂",
-        "awayRecord": "14-5",
+        "awayRecord": "15-5",
         "homeRecord": "4-13",
         "sfOpen": true,
         "oddsSf": {
@@ -93,7 +93,7 @@
         "away": "开拓者",
         "home": "76人",
         "awayRecord": "12-6",
-        "homeRecord": "15-4",
+        "homeRecord": "16-4",
         "sfOpen": true,
         "oddsSf": {
           "away": 2.48,
@@ -162,7 +162,7 @@
         "away": "雷霆",
         "home": "步行者",
         "awayRecord": "10-9",
-        "homeRecord": "6-12",
+        "homeRecord": "6-13",
         "sfOpen": true,
         "oddsSf": {
           "away": 1.4,
@@ -230,8 +230,8 @@
         "kickoffIso": "2026-11-24T08:30:00+08:00",
         "away": "雄鹿",
         "home": "猛龙",
-        "awayRecord": "2-17",
-        "homeRecord": "6-11",
+        "awayRecord": "2-18",
+        "homeRecord": "7-11",
         "sfOpen": true,
         "oddsSf": {
           "away": 3.95,
@@ -299,8 +299,8 @@
         "kickoffIso": "2026-11-24T08:30:00+08:00",
         "away": "篮网",
         "home": "森林狼",
-        "awayRecord": "4-13",
-        "homeRecord": "14-5",
+        "awayRecord": "4-14",
+        "homeRecord": "14-6",
         "sfOpen": true,
         "oddsSf": {
           "away": 5.05,
@@ -1060,7 +1060,7 @@
         "kickoffIso": "2026-11-25T08:00:00+08:00",
         "away": "活塞",
         "home": "魔术",
-        "awayRecord": "11-6",
+        "awayRecord": "12-6",
         "homeRecord": "7-10",
         "sfOpen": true,
         "oddsSf": {
@@ -1129,7 +1129,7 @@
         "kickoffIso": "2026-11-25T09:00:00+08:00",
         "away": "凯尔特人",
         "home": "奇才",
-        "awayRecord": "12-6",
+        "awayRecord": "12-7",
         "homeRecord": "7-12",
         "sfOpen": true,
         "oddsSf": {
@@ -1269,8 +1269,8 @@
         "kickoffIso": "2026-11-26T06:00:00+08:00",
         "away": "热火",
         "home": "76人",
-        "awayRecord": "10-7",
-        "homeRecord": "15-4",
+        "awayRecord": "11-7",
+        "homeRecord": "16-4",
         "sfOpen": true,
         "oddsSf": {
           "away": 1.78,
@@ -1408,7 +1408,7 @@
         "away": "骑士",
         "home": "尼克斯",
         "awayRecord": "9-10",
-        "homeRecord": "12-6",
+        "homeRecord": "12-7",
         "sfOpen": true,
         "oddsSf": {
           "away": 2.56,
@@ -1476,7 +1476,7 @@
         "kickoffIso": "2026-11-26T08:30:00+08:00",
         "away": "森林狼",
         "home": "雷霆",
-        "awayRecord": "14-5",
+        "awayRecord": "14-6",
         "homeRecord": "10-9",
         "sfOpen": true,
         "oddsSf": {
@@ -1546,7 +1546,7 @@
         "away": "快船",
         "home": "灰熊",
         "awayRecord": "4-13",
-        "homeRecord": "14-5",
+        "homeRecord": "15-5",
         "sfOpen": true,
         "oddsSf": {
           "away": 3.46,
@@ -1614,8 +1614,8 @@
         "kickoffIso": "2026-11-26T09:00:00+08:00",
         "away": "篮网",
         "home": "雄鹿",
-        "awayRecord": "4-13",
-        "homeRecord": "2-17",
+        "awayRecord": "4-14",
+        "homeRecord": "2-18",
         "sfOpen": true,
         "oddsSf": {
           "away": 1.99,
@@ -1892,8 +1892,8 @@
         "kickoffIso": "2026-11-28T08:00:00+08:00",
         "away": "热火",
         "home": "尼克斯",
-        "awayRecord": "10-7",
-        "homeRecord": "12-6",
+        "awayRecord": "11-7",
+        "homeRecord": "12-7",
         "sfOpen": true,
         "oddsSf": {
           "away": 2.34,
@@ -1961,8 +1961,8 @@
         "kickoffIso": "2026-11-28T08:30:00+08:00",
         "away": "雄鹿",
         "home": "活塞",
-        "awayRecord": "2-17",
-        "homeRecord": "11-6",
+        "awayRecord": "2-18",
+        "homeRecord": "12-6",
         "sfOpen": true,
         "oddsSf": {
           "away": 4.35,
@@ -2030,8 +2030,8 @@
         "kickoffIso": "2026-11-28T08:30:00+08:00",
         "away": "76人",
         "home": "步行者",
-        "awayRecord": "15-4",
-        "homeRecord": "6-12",
+        "awayRecord": "16-4",
+        "homeRecord": "6-13",
         "sfOpen": true,
         "oddsSf": {
           "away": 1.44,
@@ -2099,8 +2099,8 @@
         "kickoffIso": "2026-11-28T08:30:00+08:00",
         "away": "篮网",
         "home": "猛龙",
-        "awayRecord": "4-13",
-        "homeRecord": "6-11",
+        "awayRecord": "4-14",
+        "homeRecord": "7-11",
         "sfOpen": true,
         "oddsSf": {
           "away": 4.35,
@@ -2168,8 +2168,8 @@
         "kickoffIso": "2026-11-28T09:00:00+08:00",
         "away": "老鹰",
         "home": "凯尔特人",
-        "awayRecord": "11-6",
-        "homeRecord": "12-6",
+        "awayRecord": "12-6",
+        "homeRecord": "12-7",
         "sfOpen": true,
         "oddsSf": {
           "away": 4.35,
@@ -2237,8 +2237,8 @@
         "kickoffIso": "2026-11-28T09:30:00+08:00",
         "away": "灰熊",
         "home": "森林狼",
-        "awayRecord": "14-5",
-        "homeRecord": "14-5",
+        "awayRecord": "15-5",
+        "homeRecord": "14-6",
         "sfOpen": true,
         "oddsSf": {
           "away": 2.15,
@@ -2310,37 +2310,37 @@
         "homeRecord": "9-8",
         "sfOpen": true,
         "oddsSf": {
-          "away": 2.34,
-          "home": 1.44
+          "away": 1.78,
+          "home": 1.78
         },
         "initSpread": 0.0,
-        "spread": -3.5,
+        "spread": 0.0,
         "oddsSpread": {
           "away": 1.7,
           "home": 1.7
         },
         "initTotal": 222.5,
-        "total": 225.5,
+        "total": 222.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
         },
         "sfcOdds": {
           "away": [
-            5.78,
-            8.08,
-            13.6,
-            27.59,
-            67.42,
-            99.0
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
           ],
           "home": [
-            4.94,
-            5.33,
-            6.91,
-            10.8,
-            20.34,
-            30.5
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
           ]
         },
         "awayForm": [
@@ -2379,37 +2379,37 @@
         "homeRecord": "15-4",
         "sfOpen": true,
         "oddsSf": {
-          "away": 3.11,
-          "home": 1.25
+          "away": 1.78,
+          "home": 1.78
         },
         "initSpread": -6.5,
-        "spread": -6.5,
+        "spread": 0.0,
         "oddsSpread": {
           "away": 1.7,
           "home": 1.7
         },
         "initTotal": 225.5,
-        "total": 226.5,
+        "total": 222.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
         },
         "sfcOdds": {
           "away": [
-            6.91,
-            10.8,
-            20.34,
-            46.12,
-            99.0,
-            99.0
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
           ],
           "home": [
-            5.17,
-            4.98,
-            5.78,
-            8.08,
-            13.6,
-            17.26
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
           ]
         },
         "awayForm": [
@@ -2448,37 +2448,37 @@
         "homeRecord": "3-16",
         "sfOpen": true,
         "oddsSf": {
-          "away": 1.12,
-          "home": 4.35
+          "away": 1.78,
+          "home": 1.78
         },
         "initSpread": 9.5,
-        "spread": 9.5,
+        "spread": 0.0,
         "oddsSpread": {
           "away": 1.7,
           "home": 1.7
         },
         "initTotal": 228.5,
-        "total": 232.5,
+        "total": 222.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
         },
         "sfcOdds": {
           "away": [
-            5.78,
-            4.98,
-            5.17,
-            6.46,
-            9.73,
-            10.36
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
           ],
           "home": [
-            8.83,
-            15.44,
-            32.5,
-            82.43,
-            99.0,
-            99.0
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
           ]
         },
         "awayForm": [
@@ -2517,37 +2517,37 @@
         "homeRecord": "4-13",
         "sfOpen": true,
         "oddsSf": {
-          "away": 2.15,
-          "home": 1.52
+          "away": 1.78,
+          "home": 1.78
         },
         "initSpread": 0.0,
-        "spread": -2.5,
+        "spread": 0.0,
         "oddsSpread": {
           "away": 1.7,
           "home": 1.7
         },
         "initTotal": 222.5,
-        "total": 229.5,
+        "total": 222.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
         },
         "sfcOdds": {
           "away": [
-            5.53,
-            7.44,
-            12.08,
-            23.6,
-            55.56,
-            99.0
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
           ],
           "home": [
-            4.94,
-            5.53,
-            7.44,
-            12.08,
-            23.6,
-            37.36
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
           ]
         },
         "awayForm": [
@@ -2586,37 +2586,37 @@
         "homeRecord": "12-6",
         "sfOpen": true,
         "oddsSf": {
-          "away": 3.46,
-          "home": 1.2
+          "away": 1.78,
+          "home": 1.78
         },
         "initSpread": 0.0,
-        "spread": -7.5,
+        "spread": 0.0,
         "oddsSpread": {
           "away": 1.7,
           "home": 1.7
         },
         "initTotal": 222.5,
-        "total": 216.5,
+        "total": 222.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
         },
         "sfcOdds": {
           "away": [
-            7.44,
-            12.08,
-            23.6,
-            55.56,
-            99.0,
-            99.0
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
           ],
           "home": [
-            5.33,
-            4.94,
-            5.53,
-            7.44,
-            12.08,
-            14.46
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
           ]
         },
         "awayForm": [
@@ -2657,37 +2657,37 @@
         "homeRecord": "7-12",
         "sfOpen": true,
         "oddsSf": {
-          "away": 1.78,
-          "home": 1.78
+          "away": 1.44,
+          "home": 2.34
         },
         "initSpread": 0.0,
-        "spread": 0.0,
+        "spread": 3.5,
         "oddsSpread": {
           "away": 1.7,
           "home": 1.7
         },
         "initTotal": 222.5,
-        "total": 222.5,
+        "total": 218.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
         },
         "sfcOdds": {
           "away": [
-            5.11,
-            6.27,
-            9.26,
-            16.49,
-            35.38,
-            63.92
+            4.94,
+            5.33,
+            6.91,
+            10.8,
+            20.34,
+            30.5
           ],
           "home": [
-            5.11,
-            6.27,
-            9.26,
-            16.49,
-            35.38,
-            63.92
+            5.78,
+            8.08,
+            13.6,
+            27.59,
+            67.42,
+            99.0
           ]
         },
         "awayForm": [
@@ -2722,41 +2722,41 @@
         "kickoffIso": "2026-11-29T07:00:00+08:00",
         "away": "篮网",
         "home": "黄蜂",
-        "awayRecord": "4-13",
+        "awayRecord": "4-14",
         "homeRecord": "4-13",
         "sfOpen": true,
         "oddsSf": {
-          "away": 1.78,
-          "home": 1.78
+          "away": 2.81,
+          "home": 1.3
         },
         "initSpread": 0.0,
-        "spread": 0.0,
+        "spread": -5.5,
         "oddsSpread": {
           "away": 1.7,
           "home": 1.7
         },
         "initTotal": 222.5,
-        "total": 222.5,
+        "total": 213.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
         },
         "sfcOdds": {
           "away": [
-            5.11,
-            6.27,
-            9.26,
-            16.49,
-            35.38,
-            63.92
+            6.46,
+            9.73,
+            17.65,
+            38.58,
+            99.0,
+            99.0
           ],
           "home": [
-            5.11,
-            6.27,
-            9.26,
-            16.49,
-            35.38,
-            63.92
+            5.06,
+            5.06,
+            6.09,
+            8.83,
+            15.44,
+            20.73
           ]
         },
         "awayForm": [
@@ -2791,41 +2791,41 @@
         "kickoffIso": "2026-11-29T09:00:00+08:00",
         "away": "步行者",
         "home": "公牛",
-        "awayRecord": "6-12",
+        "awayRecord": "6-13",
         "homeRecord": "6-12",
         "sfOpen": true,
         "oddsSf": {
-          "away": 1.78,
-          "home": 1.78
+          "away": 2.15,
+          "home": 1.52
         },
         "initSpread": 0.0,
-        "spread": 0.0,
+        "spread": -2.5,
         "oddsSpread": {
           "away": 1.7,
           "home": 1.7
         },
         "initTotal": 222.5,
-        "total": 222.5,
+        "total": 234.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
         },
         "sfcOdds": {
           "away": [
-            5.11,
-            6.27,
-            9.26,
-            16.49,
-            35.38,
-            63.92
+            5.53,
+            7.44,
+            12.08,
+            23.6,
+            55.56,
+            99.0
           ],
           "home": [
-            5.11,
-            6.27,
-            9.26,
-            16.49,
-            35.38,
-            63.92
+            4.94,
+            5.53,
+            7.44,
+            12.08,
+            23.6,
+            37.36
           ]
         },
         "awayForm": [
@@ -2861,40 +2861,40 @@
         "away": "雷霆",
         "home": "雄鹿",
         "awayRecord": "10-9",
-        "homeRecord": "2-17",
-        "sfOpen": true,
+        "homeRecord": "2-18",
+        "sfOpen": false,
         "oddsSf": {
-          "away": 1.78,
-          "home": 1.78
+          "away": null,
+          "home": null
         },
         "initSpread": 0.0,
-        "spread": 0.0,
+        "spread": 12.5,
         "oddsSpread": {
           "away": 1.7,
           "home": 1.7
         },
         "initTotal": 222.5,
-        "total": 222.5,
+        "total": 228.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
         },
         "sfcOdds": {
           "away": [
-            5.11,
-            6.27,
-            9.26,
-            16.49,
-            35.38,
-            63.92
+            6.91,
+            5.33,
+            4.94,
+            5.53,
+            7.44,
+            6.58
           ],
           "home": [
-            5.11,
-            6.27,
-            9.26,
-            16.49,
-            35.38,
-            63.92
+            12.08,
+            23.6,
+            55.56,
+            99.0,
+            99.0,
+            99.0
           ]
         },
         "awayForm": [
@@ -2929,7 +2929,7 @@
         "kickoffIso": "2026-11-29T09:30:00+08:00",
         "away": "76人",
         "home": "火箭",
-        "awayRecord": "15-4",
+        "awayRecord": "16-4",
         "homeRecord": "14-5",
         "sfOpen": true,
         "oddsSf": {
@@ -3079,6 +3079,30 @@
     "espn_20261125_309": {
       "awayPts": 111,
       "homePts": 116
+    },
+    "espn_20261127_301": {
+      "awayPts": 108,
+      "homePts": 105
+    },
+    "espn_20261127_302": {
+      "awayPts": 98,
+      "homePts": 113
+    },
+    "espn_20261127_303": {
+      "awayPts": 111,
+      "homePts": 87
+    },
+    "espn_20261127_304": {
+      "awayPts": 100,
+      "homePts": 124
+    },
+    "espn_20261127_305": {
+      "awayPts": 87,
+      "homePts": 86
+    },
+    "espn_20261127_306": {
+      "awayPts": 114,
+      "homePts": 109
     }
   }
 }
