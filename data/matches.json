@@ -1,15 +1,15 @@
 {
   "meta": {
-    "updatedAt": "2026-11-28 12:25:32 +08:00",
+    "updatedAt": "2026-11-28 15:44:10 +08:00",
     "runner": "github-actions",
     "channelsOk": [
       "espn_nba_all"
     ],
     "channelsError": [],
     "stats": {
-      "addedMatches": 0,
-      "updatedOdds": 10,
-      "matchedScores": 6
+      "addedMatches": 10,
+      "updatedOdds": 5,
+      "matchedScores": 11
     }
   },
   "issuesByDate": {
@@ -92,7 +92,7 @@
         "kickoffIso": "2026-11-24T08:00:00+08:00",
         "away": "开拓者",
         "home": "76人",
-        "awayRecord": "12-6",
+        "awayRecord": "13-6",
         "homeRecord": "16-4",
         "sfOpen": true,
         "oddsSf": {
@@ -437,8 +437,8 @@
         "kickoffIso": "2026-11-24T09:00:00+08:00",
         "away": "太阳",
         "home": "鹈鹕",
-        "awayRecord": "9-8",
-        "homeRecord": "5-14",
+        "awayRecord": "9-9",
+        "homeRecord": "6-14",
         "sfOpen": true,
         "oddsSf": {
           "away": 1.29,
@@ -506,7 +506,7 @@
         "kickoffIso": "2026-11-24T09:30:00+08:00",
         "away": "快船",
         "home": "火箭",
-        "awayRecord": "4-13",
+        "awayRecord": "4-14",
         "homeRecord": "14-5",
         "sfOpen": false,
         "oddsSf": {
@@ -575,7 +575,7 @@
         "kickoffIso": "2026-11-24T11:00:00+08:00",
         "away": "马刺",
         "home": "国王",
-        "awayRecord": "15-4",
+        "awayRecord": "16-4",
         "homeRecord": "2-16",
         "sfOpen": false,
         "oddsSf": {
@@ -644,8 +644,8 @@
         "kickoffIso": "2026-11-24T11:00:00+08:00",
         "away": "爵士",
         "home": "湖人",
-        "awayRecord": "3-16",
-        "homeRecord": "15-3",
+        "awayRecord": "3-17",
+        "homeRecord": "15-4",
         "sfOpen": false,
         "oddsSf": {
           "away": null,
@@ -1198,8 +1198,8 @@
         "kickoffIso": "2026-11-25T11:00:00+08:00",
         "away": "独行侠",
         "home": "掘金",
-        "awayRecord": "11-7",
-        "homeRecord": "10-6",
+        "awayRecord": "12-7",
+        "homeRecord": "11-6",
         "sfOpen": true,
         "oddsSf": {
           "away": 1.78,
@@ -1545,7 +1545,7 @@
         "kickoffIso": "2026-11-26T09:00:00+08:00",
         "away": "快船",
         "home": "灰熊",
-        "awayRecord": "4-13",
+        "awayRecord": "4-14",
         "homeRecord": "15-5",
         "sfOpen": true,
         "oddsSf": {
@@ -1683,7 +1683,7 @@
         "kickoffIso": "2026-11-26T09:30:00+08:00",
         "away": "太阳",
         "home": "火箭",
-        "awayRecord": "9-8",
+        "awayRecord": "9-9",
         "homeRecord": "14-5",
         "sfOpen": true,
         "oddsSf": {
@@ -1753,7 +1753,7 @@
         "away": "国王",
         "home": "勇士",
         "awayRecord": "2-16",
-        "homeRecord": "10-8",
+        "homeRecord": "10-9",
         "sfOpen": true,
         "oddsSf": {
           "away": 1.78,
@@ -1821,8 +1821,8 @@
         "kickoffIso": "2026-11-26T11:00:00+08:00",
         "away": "马刺",
         "home": "开拓者",
-        "awayRecord": "15-4",
-        "homeRecord": "12-6",
+        "awayRecord": "16-4",
+        "homeRecord": "13-6",
         "sfOpen": true,
         "oddsSf": {
           "away": 1.78,
@@ -2306,8 +2306,8 @@
         "kickoffIso": "2026-11-28T10:00:00+08:00",
         "away": "独行侠",
         "home": "太阳",
-        "awayRecord": "11-7",
-        "homeRecord": "9-8",
+        "awayRecord": "12-7",
+        "homeRecord": "9-9",
         "sfOpen": true,
         "oddsSf": {
           "away": 1.78,
@@ -2375,8 +2375,8 @@
         "kickoffIso": "2026-11-28T10:30:00+08:00",
         "away": "湖人",
         "home": "马刺",
-        "awayRecord": "15-3",
-        "homeRecord": "15-4",
+        "awayRecord": "15-4",
+        "homeRecord": "16-4",
         "sfOpen": true,
         "oddsSf": {
           "away": 1.78,
@@ -2444,8 +2444,8 @@
         "kickoffIso": "2026-11-28T10:30:00+08:00",
         "away": "掘金",
         "home": "爵士",
-        "awayRecord": "10-6",
-        "homeRecord": "3-16",
+        "awayRecord": "11-6",
+        "homeRecord": "3-17",
         "sfOpen": true,
         "oddsSf": {
           "away": 1.78,
@@ -2513,8 +2513,8 @@
         "kickoffIso": "2026-11-28T10:30:00+08:00",
         "away": "鹈鹕",
         "home": "快船",
-        "awayRecord": "5-14",
-        "homeRecord": "4-13",
+        "awayRecord": "6-14",
+        "homeRecord": "4-14",
         "sfOpen": true,
         "oddsSf": {
           "away": 1.78,
@@ -2582,8 +2582,8 @@
         "kickoffIso": "2026-11-28T10:30:00+08:00",
         "away": "勇士",
         "home": "开拓者",
-        "awayRecord": "10-8",
-        "homeRecord": "12-6",
+        "awayRecord": "10-9",
+        "homeRecord": "13-6",
         "sfOpen": true,
         "oddsSf": {
           "away": 1.78,
@@ -2667,7 +2667,7 @@
           "home": 1.7
         },
         "initTotal": 222.5,
-        "total": 218.5,
+        "total": 219.5,
         "oddsTotal": {
           "over": 1.7,
           "under": 1.7
@@ -2726,11 +2726,11 @@
         "homeRecord": "4-13",
         "sfOpen": true,
         "oddsSf": {
-          "away": 2.81,
-          "home": 1.3
+          "away": 3.11,
+          "home": 1.25
         },
         "initSpread": 0.0,
-        "spread": -5.5,
+        "spread": -6.5,
         "oddsSpread": {
           "away": 1.7,
           "home": 1.7
@@ -2743,20 +2743,20 @@
         },
         "sfcOdds": {
           "away": [
-            6.46,
-            9.73,
-            17.65,
-            38.58,
+            6.91,
+            10.8,
+            20.34,
+            46.12,
             99.0,
             99.0
           ],
           "home": [
-            5.06,
-            5.06,
-            6.09,
-            8.83,
-            15.44,
-            20.73
+            5.17,
+            4.98,
+            5.78,
+            8.08,
+            13.6,
+            17.26
           ]
         },
         "awayForm": [
@@ -2862,13 +2862,13 @@
         "home": "雄鹿",
         "awayRecord": "10-9",
         "homeRecord": "2-18",
-        "sfOpen": false,
+        "sfOpen": true,
         "oddsSf": {
-          "away": null,
-          "home": null
+          "away": 1.06,
+          "home": 5.61
         },
         "initSpread": 0.0,
-        "spread": 12.5,
+        "spread": 11.5,
         "oddsSpread": {
           "away": 1.7,
           "home": 1.7
@@ -2881,17 +2881,17 @@
         },
         "sfcOdds": {
           "away": [
-            6.91,
-            5.33,
-            4.94,
-            5.53,
-            7.44,
-            6.58
+            6.46,
+            5.17,
+            4.98,
+            5.78,
+            8.08,
+            7.61
           ],
           "home": [
-            12.08,
-            23.6,
-            55.56,
+            10.8,
+            20.34,
+            46.12,
             99.0,
             99.0,
             99.0
@@ -2931,6 +2931,77 @@
         "home": "火箭",
         "awayRecord": "16-4",
         "homeRecord": "14-5",
+        "sfOpen": false,
+        "oddsSf": {
+          "away": null,
+          "home": null
+        },
+        "initSpread": 0.0,
+        "spread": -12.5,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 222.5,
+        "total": 219.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            12.08,
+            23.6,
+            55.56,
+            99.0,
+            99.0,
+            99.0
+          ],
+          "home": [
+            6.91,
+            5.33,
+            4.94,
+            5.53,
+            7.44,
+            6.58
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "W",
+          "L",
+          "W"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "76人（赛季 15-4），已自动接入最新让分与大小分盘口。",
+        "homeStats": "火箭（赛季 14-5），已自动接入最新让分与大小分盘口。",
+        "awayInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "homeInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "h2h": "76人(客) VS 火箭(主)：主让 +0.0 / 预设总分 222.5。",
+        "awayMotiv": 72,
+        "homeMotiv": 72,
+        "motivationNote": "GitHub Actions 自动同步：主让 +0.0，预设总分 222.5。"
+      }
+    ],
+    "2026-11-29": [
+      {
+        "id": "espn_20261129_301",
+        "code": "周日 301",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-30 04:30",
+        "kickoffIso": "2026-11-30T04:30:00+08:00",
+        "away": "热火",
+        "home": "骑士",
+        "awayRecord": "11-7",
+        "homeRecord": "9-10",
         "sfOpen": true,
         "oddsSf": {
           "away": 1.78,
@@ -2980,11 +3051,632 @@
           "W",
           "L"
         ],
-        "awayStats": "76人（赛季 15-4），已自动接入最新让分与大小分盘口。",
-        "homeStats": "火箭（赛季 14-5），已自动接入最新让分与大小分盘口。",
+        "awayStats": "热火（赛季 11-7），已自动接入最新让分与大小分盘口。",
+        "homeStats": "骑士（赛季 9-10），已自动接入最新让分与大小分盘口。",
         "awayInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
         "homeInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
-        "h2h": "76人(客) VS 火箭(主)：主让 +0.0 / 预设总分 222.5。",
+        "h2h": "热火(客) VS 骑士(主)：主让 +0.0 / 预设总分 222.5。",
+        "awayMotiv": 72,
+        "homeMotiv": 72,
+        "motivationNote": "GitHub Actions 自动同步：主让 +0.0，预设总分 222.5。"
+      },
+      {
+        "id": "espn_20261129_302",
+        "code": "周日 302",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-30 05:00",
+        "kickoffIso": "2026-11-30T05:00:00+08:00",
+        "away": "湖人",
+        "home": "灰熊",
+        "awayRecord": "15-4",
+        "homeRecord": "15-5",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.78,
+          "home": 1.78
+        },
+        "initSpread": 0.0,
+        "spread": 0.0,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 222.5,
+        "total": 222.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ],
+          "home": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "W",
+          "L",
+          "W"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "湖人（赛季 15-4），已自动接入最新让分与大小分盘口。",
+        "homeStats": "灰熊（赛季 15-5），已自动接入最新让分与大小分盘口。",
+        "awayInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "homeInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "h2h": "湖人(客) VS 灰熊(主)：主让 +0.0 / 预设总分 222.5。",
+        "awayMotiv": 72,
+        "homeMotiv": 72,
+        "motivationNote": "GitHub Actions 自动同步：主让 +0.0，预设总分 222.5。"
+      },
+      {
+        "id": "espn_20261129_303",
+        "code": "周日 303",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-30 05:00",
+        "kickoffIso": "2026-11-30T05:00:00+08:00",
+        "away": "凯尔特人",
+        "home": "马刺",
+        "awayRecord": "12-7",
+        "homeRecord": "16-4",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.78,
+          "home": 1.78
+        },
+        "initSpread": 0.0,
+        "spread": 0.0,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 222.5,
+        "total": 222.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ],
+          "home": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "W",
+          "L",
+          "W"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "凯尔特人（赛季 12-7），已自动接入最新让分与大小分盘口。",
+        "homeStats": "马刺（赛季 16-4），已自动接入最新让分与大小分盘口。",
+        "awayInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "homeInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "h2h": "凯尔特人(客) VS 马刺(主)：主让 +0.0 / 预设总分 222.5。",
+        "awayMotiv": 72,
+        "homeMotiv": 72,
+        "motivationNote": "GitHub Actions 自动同步：主让 +0.0，预设总分 222.5。"
+      },
+      {
+        "id": "espn_20261129_304",
+        "code": "周日 304",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-30 06:00",
+        "kickoffIso": "2026-11-30T06:00:00+08:00",
+        "away": "太阳",
+        "home": "爵士",
+        "awayRecord": "9-9",
+        "homeRecord": "3-17",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.78,
+          "home": 1.78
+        },
+        "initSpread": 0.0,
+        "spread": 0.0,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 222.5,
+        "total": 222.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ],
+          "home": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "W",
+          "L",
+          "W"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "太阳（赛季 9-9），已自动接入最新让分与大小分盘口。",
+        "homeStats": "爵士（赛季 3-17），已自动接入最新让分与大小分盘口。",
+        "awayInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "homeInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "h2h": "太阳(客) VS 爵士(主)：主让 +0.0 / 预设总分 222.5。",
+        "awayMotiv": 72,
+        "homeMotiv": 72,
+        "motivationNote": "GitHub Actions 自动同步：主让 +0.0，预设总分 222.5。"
+      },
+      {
+        "id": "espn_20261129_305",
+        "code": "周日 305",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-30 07:00",
+        "kickoffIso": "2026-11-30T07:00:00+08:00",
+        "away": "魔术",
+        "home": "活塞",
+        "awayRecord": "7-10",
+        "homeRecord": "12-6",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.78,
+          "home": 1.78
+        },
+        "initSpread": 0.0,
+        "spread": 0.0,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 222.5,
+        "total": 222.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ],
+          "home": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "W",
+          "L",
+          "W"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "魔术（赛季 7-10），已自动接入最新让分与大小分盘口。",
+        "homeStats": "活塞（赛季 12-6），已自动接入最新让分与大小分盘口。",
+        "awayInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "homeInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "h2h": "魔术(客) VS 活塞(主)：主让 +0.0 / 预设总分 222.5。",
+        "awayMotiv": 72,
+        "homeMotiv": 72,
+        "motivationNote": "GitHub Actions 自动同步：主让 +0.0，预设总分 222.5。"
+      },
+      {
+        "id": "espn_20261129_306",
+        "code": "周日 306",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-30 07:00",
+        "kickoffIso": "2026-11-30T07:00:00+08:00",
+        "away": "老鹰",
+        "home": "尼克斯",
+        "awayRecord": "12-6",
+        "homeRecord": "12-7",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.78,
+          "home": 1.78
+        },
+        "initSpread": 0.0,
+        "spread": 0.0,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 222.5,
+        "total": 222.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ],
+          "home": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "W",
+          "L",
+          "W"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "老鹰（赛季 12-6），已自动接入最新让分与大小分盘口。",
+        "homeStats": "尼克斯（赛季 12-7），已自动接入最新让分与大小分盘口。",
+        "awayInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "homeInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "h2h": "老鹰(客) VS 尼克斯(主)：主让 +0.0 / 预设总分 222.5。",
+        "awayMotiv": 72,
+        "homeMotiv": 72,
+        "motivationNote": "GitHub Actions 自动同步：主让 +0.0，预设总分 222.5。"
+      },
+      {
+        "id": "espn_20261129_307",
+        "code": "周日 307",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-30 07:00",
+        "kickoffIso": "2026-11-30T07:00:00+08:00",
+        "away": "掘金",
+        "home": "猛龙",
+        "awayRecord": "11-6",
+        "homeRecord": "7-11",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.78,
+          "home": 1.78
+        },
+        "initSpread": 0.0,
+        "spread": 0.0,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 222.5,
+        "total": 222.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ],
+          "home": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "W",
+          "L",
+          "W"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "掘金（赛季 11-6），已自动接入最新让分与大小分盘口。",
+        "homeStats": "猛龙（赛季 7-11），已自动接入最新让分与大小分盘口。",
+        "awayInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "homeInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "h2h": "掘金(客) VS 猛龙(主)：主让 +0.0 / 预设总分 222.5。",
+        "awayMotiv": 72,
+        "homeMotiv": 72,
+        "motivationNote": "GitHub Actions 自动同步：主让 +0.0，预设总分 222.5。"
+      },
+      {
+        "id": "espn_20261129_308",
+        "code": "周日 308",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-30 07:00",
+        "kickoffIso": "2026-11-30T07:00:00+08:00",
+        "away": "鹈鹕",
+        "home": "开拓者",
+        "awayRecord": "6-14",
+        "homeRecord": "13-6",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.78,
+          "home": 1.78
+        },
+        "initSpread": 0.0,
+        "spread": 0.0,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 222.5,
+        "total": 222.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ],
+          "home": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "W",
+          "L",
+          "W"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "鹈鹕（赛季 6-14），已自动接入最新让分与大小分盘口。",
+        "homeStats": "开拓者（赛季 13-6），已自动接入最新让分与大小分盘口。",
+        "awayInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "homeInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "h2h": "鹈鹕(客) VS 开拓者(主)：主让 +0.0 / 预设总分 222.5。",
+        "awayMotiv": 72,
+        "homeMotiv": 72,
+        "motivationNote": "GitHub Actions 自动同步：主让 +0.0，预设总分 222.5。"
+      },
+      {
+        "id": "espn_20261129_309",
+        "code": "周日 309",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-30 09:30",
+        "kickoffIso": "2026-11-30T09:30:00+08:00",
+        "away": "快船",
+        "home": "勇士",
+        "awayRecord": "4-14",
+        "homeRecord": "10-9",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.78,
+          "home": 1.78
+        },
+        "initSpread": 0.0,
+        "spread": 0.0,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 222.5,
+        "total": 222.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ],
+          "home": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "W",
+          "L",
+          "W"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "快船（赛季 4-14），已自动接入最新让分与大小分盘口。",
+        "homeStats": "勇士（赛季 10-9），已自动接入最新让分与大小分盘口。",
+        "awayInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "homeInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "h2h": "快船(客) VS 勇士(主)：主让 +0.0 / 预设总分 222.5。",
+        "awayMotiv": 72,
+        "homeMotiv": 72,
+        "motivationNote": "GitHub Actions 自动同步：主让 +0.0，预设总分 222.5。"
+      },
+      {
+        "id": "espn_20261129_310",
+        "code": "周日 310",
+        "league": "NBA",
+        "group": "常规赛",
+        "kickoff": "11-30 10:00",
+        "kickoffIso": "2026-11-30T10:00:00+08:00",
+        "away": "森林狼",
+        "home": "国王",
+        "awayRecord": "14-6",
+        "homeRecord": "2-16",
+        "sfOpen": true,
+        "oddsSf": {
+          "away": 1.78,
+          "home": 1.78
+        },
+        "initSpread": 0.0,
+        "spread": 0.0,
+        "oddsSpread": {
+          "away": 1.7,
+          "home": 1.7
+        },
+        "initTotal": 222.5,
+        "total": 222.5,
+        "oddsTotal": {
+          "over": 1.7,
+          "under": 1.7
+        },
+        "sfcOdds": {
+          "away": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ],
+          "home": [
+            5.11,
+            6.27,
+            9.26,
+            16.49,
+            35.38,
+            63.92
+          ]
+        },
+        "awayForm": [
+          "W",
+          "L",
+          "W",
+          "L",
+          "W"
+        ],
+        "homeForm": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "L"
+        ],
+        "awayStats": "森林狼（赛季 14-6），已自动接入最新让分与大小分盘口。",
+        "homeStats": "国王（赛季 2-16），已自动接入最新让分与大小分盘口。",
+        "awayInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "homeInjuries": "请关注赛前 30 分钟官方伤病报告更新。",
+        "h2h": "森林狼(客) VS 国王(主)：主让 +0.0 / 预设总分 222.5。",
         "awayMotiv": 72,
         "homeMotiv": 72,
         "motivationNote": "GitHub Actions 自动同步：主让 +0.0，预设总分 222.5。"
@@ -3103,6 +3795,26 @@
     "espn_20261127_306": {
       "awayPts": 114,
       "homePts": 109
+    },
+    "espn_20261127_307": {
+      "awayPts": 113,
+      "homePts": 109
+    },
+    "espn_20261127_308": {
+      "awayPts": 96,
+      "homePts": 99
+    },
+    "espn_20261127_309": {
+      "awayPts": 120,
+      "homePts": 107
+    },
+    "espn_20261127_310": {
+      "awayPts": 105,
+      "homePts": 104
+    },
+    "espn_20261127_311": {
+      "awayPts": 94,
+      "homePts": 116
     }
   }
 }
